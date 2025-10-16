@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Footer</title>
+</head>
+<body>
+<!-- Footer Fragment -->
+<footer class="main-footer" th:fragment="footer">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                <span>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2024</span> Accounting Pro. All rights reserved.</span>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <span>Version 1.0.0</span>
+                <span class="mx-2">|</span>
+                <a class="text-decoration-none text-muted" th:href="@{/privacy-policy}">Privacy Policy</a>
+                <span class="mx-2">|</span>
+                <a class="text-decoration-none text-muted" th:href="@{/terms-of-service}">Terms of Service</a>
+                <span class="mx-2">|</span>
+                <a class="text-decoration-none text-muted" th:href="@{/contact}">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Alternative Footer with more details -->
+<footer class="main-footer" th:fragment="footer-detailed">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 mb-3 mb-md-0">
+                <h6 class="fw-bold text-dark mb-3">Accounting Pro</h6>
+                <p class="small mb-2">Comprehensive accounting solution for modern businesses.</p>
+                <div class="social-links">
+                    <a class="text-muted me-3" href="#" title="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a class="text-muted me-3" href="#" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="text-muted me-3" href="#" title="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a class="text-muted" href="#" title="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-2 col-6 mb-3 mb-md-0">
+                <h6 class="fw-bold text-dark mb-3">Product</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/features}">Features</a></li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/pricing}">Pricing</a></li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none"
+                                        th:href="@{/integrations}">Integrations</a></li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/changelog}">Changelog</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-2 col-6 mb-3 mb-md-0">
+                <h6 class="fw-bold text-dark mb-3">Resources</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/docs}">Documentation</a>
+                    </li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/tutorials}">Tutorials</a>
+                    </li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/blog}">Blog</a></li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/api}">API Reference</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2 col-6 mb-3 mb-md-0">
+                <h6 class="fw-bold text-dark mb-3">Company</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/about}">About Us</a></li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/careers}">Careers</a></li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/partners}">Partners</a></li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/contact}">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2 col-6 mb-3 mb-md-0">
+                <h6 class="fw-bold text-dark mb-3">Legal</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/privacy-policy}">Privacy
+                        Policy</a></li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/terms-of-service}">Terms of
+                        Service</a></li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/security}">Security</a></li>
+                    <li class="mb-2"><a class="text-muted text-decoration-none" th:href="@{/compliance}">Compliance</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="small mb-0">
+                    &copy; <span th:text="${#temporals.year(#temporals.createNow())}">2024</span> Accounting Pro.
+                    All rights reserved. Version 1.0.0
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Minimal Footer -->
+<footer class="main-footer" th:fragment="footer-minimal">
+    <div class="text-center">
+        <span>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2024</span> Accounting Pro</span>
+    </div>
+</footer>
+</body>
+</html>
