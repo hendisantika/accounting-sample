@@ -19,6 +19,8 @@ CREATE TABLE invoices (
     balance_amount DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
     notes TEXT,
     terms_and_conditions TEXT,
+    billing_address TEXT,
+    shipping_address TEXT,
     created_by_id BIGINT REFERENCES users(id),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -38,7 +40,10 @@ CREATE TABLE invoice_items (
     tax_id BIGINT REFERENCES tax_rates(id),
     tax_amount DECIMAL(19,4) DEFAULT 0.0000,
     line_total DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
-    account_id BIGINT REFERENCES accounts(id)
+    account_id BIGINT REFERENCES accounts(id),
+    line_order INTEGER,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Bills table
@@ -80,7 +85,10 @@ CREATE TABLE bill_items (
     tax_id BIGINT REFERENCES tax_rates(id),
     tax_amount DECIMAL(19,4) DEFAULT 0.0000,
     line_total DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
-    account_id BIGINT REFERENCES accounts(id)
+    account_id BIGINT REFERENCES accounts(id),
+    line_order INTEGER,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexes

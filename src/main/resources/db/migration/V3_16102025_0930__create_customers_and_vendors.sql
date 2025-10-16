@@ -29,6 +29,7 @@ CREATE TABLE customers (
     shipping_country VARCHAR(100),
     notes TEXT,
     is_active BOOLEAN NOT NULL DEFAULT true,
+    outstanding_balance DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uk_customers_org_code UNIQUE (organization_id, customer_code)
@@ -63,6 +64,8 @@ CREATE TABLE vendors (
     bank_swift_code VARCHAR(50),
     notes TEXT,
     is_active BOOLEAN NOT NULL DEFAULT true,
+    credit_limit DECIMAL(19,4),
+    outstanding_balance DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uk_vendors_org_code UNIQUE (organization_id, vendor_code)

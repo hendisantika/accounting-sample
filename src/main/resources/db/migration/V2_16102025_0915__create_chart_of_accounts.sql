@@ -11,6 +11,7 @@ CREATE TABLE accounts (
     description TEXT,
     is_active BOOLEAN NOT NULL DEFAULT true,
     is_system BOOLEAN NOT NULL DEFAULT false,
+    tax_applicable BOOLEAN,
     opening_balance DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
     current_balance DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
