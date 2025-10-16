@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 logs
+postgres_data
+redis_data
+pgadmin_data
 
 ### STS ###
 .apt_generated
