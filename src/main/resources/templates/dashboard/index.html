@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h3 mb-0">Dashboard</h1>
+                <p class="text-muted">Welcome to your accounting overview</p>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-left-primary shadow h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Total Revenue
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                     th:text="${#numbers.formatCurrency(totalRevenue ?: 0)}">
+                                    $0.00
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-currency-dollar fs-2 text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-left-danger shadow h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                    Total Expenses
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                     th:text="${#numbers.formatCurrency(totalExpenses ?: 0)}">
+                                    $0.00
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-receipt fs-2 text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-left-success shadow h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Net Profit
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                     th:text="${#numbers.formatCurrency(netProfit ?: 0)}">
+                                    $0.00
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-graph-up-arrow fs-2 text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-left-warning shadow h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Outstanding Invoices
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                     th:text="${#numbers.formatCurrency(outstandingInvoices ?: 0)}">
+                                    $0.00
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-file-earmark-text fs-2 text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Quick Actions</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-primary" th:href="@{/invoices/new}">
+                                <i class="bi bi-plus-circle me-1"></i> New Invoice
+                            </a>
+                            <a class="btn btn-danger" th:href="@{/bills/new}">
+                                <i class="bi bi-plus-circle me-1"></i> New Bill
+                            </a>
+                            <a class="btn btn-success" th:href="@{/customers/new}">
+                                <i class="bi bi-person-plus me-1"></i> New Customer
+                            </a>
+                            <a class="btn btn-info" th:href="@{/vendors/new}">
+                                <i class="bi bi-building-add me-1"></i> New Vendor
+                            </a>
+                            <a class="btn btn-warning" th:href="@{/payments/new}">
+                                <i class="bi bi-credit-card me-1"></i> Record Payment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+            <div class="col-xl-8 col-lg-7 mb-3">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-primary">Revenue vs Expenses</h6>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button class="btn btn-outline-primary active" type="button">Month</button>
+                            <button class="btn btn-outline-primary" type="button">Quarter</button>
+                            <button class="btn btn-outline-primary" type="button">Year</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas height="80" id="revenueExpensesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4 col-lg-5 mb-3">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Expenses by Category</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="expensesCategoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Invoices and Payments -->
+        <div class="row">
+            <div class="col-xl-6 mb-3">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-primary">Recent Invoices</h6>
+                        <a class="btn btn-sm btn-primary" th:href="@{/invoices}">View All</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${recentInvoices == null || recentInvoices.isEmpty()}">
+                                    <td class="text-center text-muted" colspan="5">No recent invoices</td>
+                                </tr>
+                                <tr th:each="invoice : ${recentInvoices}">
+                                    <td>
+                                        <a th:href="@{/invoices/{id}(id=${invoice.id})}"
+                                           th:text="${invoice.invoiceNumber}">INV-001</a>
+                                    </td>
+                                    <td th:text="${invoice.customer?.name}">Customer Name</td>
+                                    <td th:text="${#temporals.format(invoice.invoiceDate, 'MMM dd, yyyy')}">Jan 01,
+                                        2024
+                                    </td>
+                                    <td th:text="${#numbers.formatCurrency(invoice.totalAmount)}">$0.00</td>
+                                    <td>
+                                        <span class="badge"
+                                              th:classappend="${invoice.status.name() == 'PAID' ? 'bg-success' :
+                                                              invoice.status.name() == 'OVERDUE' ? 'bg-danger' :
+                                                              invoice.status.name() == 'SENT' ? 'bg-info' : 'bg-secondary'}"
+                                              th:text="${invoice.status}">Status</span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 mb-3">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-primary">Recent Payments</h6>
+                        <a class="btn btn-sm btn-primary" th:href="@{/payments}">View All</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Payment #</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${recentPayments == null || recentPayments.isEmpty()}">
+                                    <td class="text-center text-muted" colspan="5">No recent payments</td>
+                                </tr>
+                                <tr th:each="payment : ${recentPayments}">
+                                    <td>
+                                        <a th:href="@{/payments/{id}(id=${payment.id})}"
+                                           th:text="${payment.paymentNumber}">PAY-001</a>
+                                    </td>
+                                    <td th:text="${payment.invoice?.customer?.name}">Customer Name</td>
+                                    <td th:text="${#temporals.format(payment.paymentDate, 'MMM dd, yyyy')}">Jan 01,
+                                        2024
+                                    </td>
+                                    <td th:text="${#numbers.formatCurrency(payment.amount)}">$0.00</td>
+                                    <td>
+                                        <span class="badge bg-primary" th:text="${payment.paymentMethod}">Cash</span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script th:inline="javascript">
+        // Revenue vs Expenses Chart
+        const revenueExpensesCtx = document.getElementById('revenueExpensesChart').getContext('2d');
+        const revenueExpensesChart = new Chart(revenueExpensesCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 32000, 29000, 35000, 38000, 42000],
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.4
+                }, {
+                    label: 'Expenses',
+                    data: [8000, 12000, 10000, 15000, 14000, 18000, 17000, 19000, 18000, 21000, 22000, 24000],
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Expenses by Category Chart
+        const expensesCategoryCtx = document.getElementById('expensesCategoryChart').getContext('2d');
+        const expensesCategoryChart = new Chart(expensesCategoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Office Supplies', 'Utilities', 'Rent', 'Salaries', 'Marketing', 'Other'],
+                datasets: [{
+                    data: [12, 8, 25, 40, 10, 5],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)',
+                        'rgba(255, 159, 64, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    </script>
+</th:block>
+</div>
+
+<style layout:fragment="styles">
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+
+    .border-left-danger {
+        border-left: 0.25rem solid #e74a3b !important;
+    }
+
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+
+    .text-xs {
+        font-size: 0.7rem;
+    }
+
+    .text-gray-300 {
+        color: #dddfeb !important;
+    }
+
+    .text-gray-800 {
+        color: #5a5c69 !important;
+    }
+</style>
+</body>
+</html>
