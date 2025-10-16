@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Invoices</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Invoices</h1>
+                        <p class="text-muted">Manage your sales invoices</p>
+                    </div>
+                    <a class="btn btn-primary" th:href="@{/invoices/new}">
+                        <i class="bi bi-plus-circle me-2"></i>New Invoice
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-3">
+            <div class="col-md-3 mb-3">
+                <div class="card border-left-info shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Invoiced</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"
+                             th:text="${#numbers.formatCurrency(totalInvoiced ?: 0)}">$0.00
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-left-success shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Paid</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"
+                             th:text="${#numbers.formatCurrency(totalPaid ?: 0)}">$0.00
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-left-warning shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Outstanding</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"
+                             th:text="${#numbers.formatCurrency(totalOutstanding ?: 0)}">$0.00
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-left-danger shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Overdue</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"
+                             th:text="${#numbers.formatCurrency(totalOverdue ?: 0)}">$0.00
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form class="row g-3" method="get" th:action="@{/invoices}">
+                            <div class="col-md-3">
+                                <label class="form-label" for="search">Search</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input class="form-control" id="search" name="search" placeholder="Invoice # or customer..."
+                                           th:value="${search}" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label" for="status">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="">All Statuses</option>
+                                    <option th:selected="${status == 'DRAFT'}" value="DRAFT">Draft</option>
+                                    <option th:selected="${status == 'SENT'}" value="SENT">Sent</option>
+                                    <option th:selected="${status == 'PAID'}" value="PAID">Paid</option>
+                                    <option th:selected="${status == 'OVERDUE'}" value="OVERDUE">Overdue</option>
+                                    <option th:selected="${status == 'CANCELLED'}" value="CANCELLED">Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label" for="fromDate">From Date</label>
+                                <input class="form-control" id="fromDate" name="fromDate" th:value="${fromDate}"
+                                       type="date">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label" for="toDate">To Date</label>
+                                <input class="form-control" id="toDate" name="toDate" th:value="${toDate}"
+                                       type="date">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label" for="sortBy">Sort By</label>
+                                <select class="form-select" id="sortBy" name="sortBy">
+                                    <option th:selected="${sortBy == 'invoiceDate'}" value="invoiceDate">Date</option>
+                                    <option th:selected="${sortBy == 'invoiceNumber'}" value="invoiceNumber">Invoice #
+                                    </option>
+                                    <option th:selected="${sortBy == 'totalAmount'}" value="totalAmount">Amount</option>
+                                    <option th:selected="${sortBy == 'dueDate'}" value="dueDate">Due Date</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 d-flex align-items-end">
+                                <button class="btn btn-primary me-2" type="submit">
+                                    <i class="bi bi-funnel"></i>
+                                </button>
+                                <a class="btn btn-outline-secondary" th:href="@{/invoices}">
+                                    <i class="bi bi-x-circle"></i>
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Invoice List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            Invoice List
+                            <span class="badge bg-secondary ms-2" th:text="${invoices?.totalElements ?: 0}">0</span>
+                        </h6>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="bi bi-download me-1"></i>Export
+                            </button>
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="bi bi-printer me-1"></i>Print
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="invoicesTable">
+                                <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Due Date</th>
+                                    <th>Amount</th>
+                                    <th>Paid</th>
+                                    <th>Balance</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${invoices == null || invoices.isEmpty()}">
+                                    <td class="text-center text-muted py-4" colspan="9">
+                                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                        No invoices found
+                                    </td>
+                                </tr>
+                                <tr th:each="invoice : ${invoices}">
+                                    <td>
+                                        <a class="fw-bold text-decoration-none"
+                                           th:href="@{/invoices/{id}(id=${invoice.id})}"
+                                           th:text="${invoice.invoiceNumber}">INV-001</a>
+                                    </td>
+                                    <td>
+                                        <div th:text="${invoice.customer?.name}">Customer Name</div>
+                                        <small class="text-muted" th:if="${invoice.customer?.company}"
+                                               th:text="${invoice.customer?.company}">Company</small>
+                                    </td>
+                                    <td th:text="${#temporals.format(invoice.invoiceDate, 'MMM dd, yyyy')}">Jan 01,
+                                        2024
+                                    </td>
+                                    <td>
+                                        <span th:text="${#temporals.format(invoice.dueDate, 'MMM dd, yyyy')}">Jan 31, 2024</span>
+                                        <span class="badge bg-danger ms-1"
+                                              th:if="${invoice.dueDate != null && invoice.dueDate.isBefore(T(java.time.LocalDate).now()) && invoice.status.name() != 'PAID'}">
+                                            Overdue
+                                        </span>
+                                    </td>
+                                    <td th:text="${#numbers.formatCurrency(invoice.totalAmount)}">$0.00</td>
+                                    <td th:text="${#numbers.formatCurrency(invoice.paidAmount ?: 0)}">$0.00</td>
+                                    <td>
+                                        <span class="fw-bold"
+                                              th:classappend="${(invoice.totalAmount - (invoice.paidAmount ?: 0)) > 0 ? 'text-danger' : 'text-success'}"
+                                              th:text="${#numbers.formatCurrency(invoice.totalAmount - (invoice.paidAmount ?: 0))}">$0.00</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge"
+                                              th:classappend="${invoice.status.name() == 'PAID' ? 'bg-success' :
+                                                              invoice.status.name() == 'OVERDUE' ? 'bg-danger' :
+                                                              invoice.status.name() == 'SENT' ? 'bg-info' :
+                                                              invoice.status.name() == 'CANCELLED' ? 'bg-secondary' : 'bg-warning'}"
+                                              th:text="${invoice.status}">Status</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a class="btn btn-outline-primary"
+                                               th:href="@{/invoices/{id}(id=${invoice.id})}"
+                                               title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a class="btn btn-outline-warning"
+                                               th:href="@{/invoices/{id}/edit(id=${invoice.id})}"
+                                               th:if="${invoice.status.name() == 'DRAFT'}"
+                                               title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a class="btn btn-outline-info"
+                                               target="_blank"
+                                               th:href="@{/invoices/{id}/pdf(id=${invoice.id})}"
+                                               title="Download PDF">
+                                                <i class="bi bi-file-pdf"></i>
+                                            </a>
+                                            <button class="btn btn-outline-danger"
+                                                    th:if="${invoice.status.name() == 'DRAFT'}"
+                                                    th:onclick="'confirmDelete(' + ${invoice.id} + ', \'' + ${invoice.invoiceNumber} + '\')'"
+                                                    title="Delete"
+                                                    type="button">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tfoot th:if="${invoices != null && !invoices.isEmpty()}">
+                                <tr class="table-secondary fw-bold">
+                                    <td class="text-end" colspan="4">Totals:</td>
+                                    <td th:text="${#numbers.formatCurrency(invoices.content.![totalAmount].sum() ?: 0)}">
+                                        $0.00
+                                    </td>
+                                    <td th:text="${#numbers.formatCurrency(invoices.content.![paidAmount ?: 0].sum() ?: 0)}">
+                                        $0.00
+                                    </td>
+                                    <td th:text="${#numbers.formatCurrency((invoices.content.![totalAmount].sum() ?: 0) - (invoices.content.![paidAmount ?: 0].sum() ?: 0))}">
+                                        $0.00
+                                    </td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav th:if="${invoices != null && invoices.totalPages > 1}">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${invoices.first ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                       th:href="@{/invoices(page=${invoices.number - 1}, search=${search}, status=${status}, fromDate=${fromDate}, toDate=${toDate}, sortBy=${sortBy})}">
+                                        Previous
+                                    </a>
+                                </li>
+                                <li class="page-item"
+                                    th:classappend="${i == invoices.number ? 'active' : ''}"
+                                    th:each="i : ${#numbers.sequence(0, invoices.totalPages - 1)}">
+                                    <a class="page-link"
+                                       th:href="@{/invoices(page=${i}, search=${search}, status=${status}, fromDate=${fromDate}, toDate=${toDate}, sortBy=${sortBy})}"
+                                       th:text="${i + 1}">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${invoices.last ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                       th:href="@{/invoices(page=${invoices.number + 1}, search=${search}, status=${status}, fromDate=${fromDate}, toDate=${toDate}, sortBy=${sortBy})}">
+                                        Next
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete invoice <strong id="invoiceNumber"></strong>?</p>
+                    <p class="text-danger">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                    <form id="deleteForm" method="post" style="display: inline;">
+                        <input name="_method" type="hidden" value="delete">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        function confirmDelete(invoiceId, invoiceNum) {
+            document.getElementById('invoiceNumber').textContent = invoiceNum;
+            document.getElementById('deleteForm').action = '/invoices/' + invoiceId;
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+    </script>
+</th:block>
+
+<style layout:fragment="styles">
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+
+    .border-left-danger {
+        border-left: 0.25rem solid #e74a3b !important;
+    }
+
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+
+    .text-xs {
+        font-size: 0.7rem;
+    }
+
+    .text-gray-800 {
+        color: #5a5c69 !important;
+    }
+</style>
+</body>
+</html>
