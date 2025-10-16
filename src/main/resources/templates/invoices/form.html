@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${invoice.id == null ? 'New Invoice' : 'Edit Invoice'}">Invoice</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/invoices}">Invoices</a></li>
+                        <li class="breadcrumb-item active" th:text="${invoice.id == null ? 'New' : 'Edit'}">New</li>
+                    </ol>
+                </nav>
+                <h1 class="h3 mb-0" th:text="${invoice.id == null ? 'New Invoice' : 'Edit Invoice'}">Invoice</h1>
+            </div>
+        </div>
+
+        <form id="invoiceForm"
+              method="post"
+              th:action="${invoice.id == null ? '/invoices' : '/invoices/' + invoice.id}"
+              th:object="${invoice}">
+            <input name="_method" th:if="${invoice.id != null}" type="hidden" value="put">
+
+            <div class="row">
+                <!-- Main Form -->
+                <div class="col-lg-8 mb-3">
+                    <!-- Invoice Header -->
+                    <div class="card shadow mb-3">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="customer">Customer <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="customer" required th:field="*{customer.id}">
+                                        <option value="">Select Customer</option>
+                                        <option th:each="customer : ${customers}"
+                                                th:text="${customer.name + (customer.company != null ? ' (' + customer.company + ')' : '')}"
+                                                th:value="${customer.id}">
+                                            Customer
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="invoiceNumber">Invoice Number</label>
+                                    <input class="form-control" id="invoiceNumber" readonly
+                                           th:field="*{invoiceNumber}" type="text">
+                                    <small class="text-muted">Auto-generated</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="invoiceDate">Invoice Date <span
+                                            class="text-danger">*</span></label>
+                                    <input class="form-control" id="invoiceDate" required
+                                           th:field="*{invoiceDate}" type="date">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="dueDate">Due Date <span class="text-danger">*</span></label>
+                                    <input class="form-control" id="dueDate" required
+                                           th:field="*{dueDate}" type="date">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Line Items -->
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold text-primary">Line Items</h6>
+                            <button class="btn btn-sm btn-primary" onclick="addLineItem()" type="button">
+                                <i class="bi bi-plus-circle me-1"></i>Add Item
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table" id="lineItemsTable">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 35%;">Item</th>
+                                        <th style="width: 25%;">Description</th>
+                                        <th style="width: 10%;">Quantity</th>
+                                        <th style="width: 12%;">Price</th>
+                                        <th style="width: 8%;">Tax %</th>
+                                        <th style="width: 12%;">Amount</th>
+                                        <th style="width: 5%;"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="lineItemsBody">
+                                    <tr class="no-items-row"
+                                        th:if="${invoice.items == null || invoice.items.isEmpty()}">
+                                        <td class="text-center text-muted" colspan="7">
+                                            No items added. Click "Add Item" to get started.
+                                        </td>
+                                    </tr>
+                                    <tr class="line-item-row" th:each="item, stat : ${invoice.items}">
+                                        <td>
+                                            <select class="form-select form-select-sm item-select"
+                                                    onchange="itemChanged(this)"
+                                                    required th:name="'items[' + ${stat.index} + '].item.id'">
+                                                <option value="">Select Item</option>
+                                                <option th:attr="data-price=${availableItem.salePrice}, data-description=${availableItem.description}"
+                                                        th:each="availableItem : ${items}"
+                                                        th:selected="${item.item?.id == availableItem.id}"
+                                                        th:text="${availableItem.name}"
+                                                        th:value="${availableItem.id}">
+                                                    Item
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input class="form-control form-control-sm description-input" th:name="'items[' + ${stat.index} + '].description'"
+                                                   th:value="${item.description}"
+                                                   type="text">
+                                        </td>
+                                        <td>
+                                            <input class="form-control form-control-sm text-end quantity-input"
+                                                   min="1"
+                                                   onchange="calculateLineTotal(this)"
+                                                   required
+                                                   step="0.01" th:name="'items[' + ${stat.index} + '].quantity'"
+                                                   th:value="${item.quantity}" type="number">
+                                        </td>
+                                        <td>
+                                            <input class="form-control form-control-sm text-end price-input"
+                                                   min="0"
+                                                   onchange="calculateLineTotal(this)"
+                                                   required
+                                                   step="0.01" th:name="'items[' + ${stat.index} + '].unitPrice'"
+                                                   th:value="${item.unitPrice}" type="number">
+                                        </td>
+                                        <td>
+                                            <input class="form-control form-control-sm text-end tax-input" max="100"
+                                                   min="0"
+                                                   onchange="calculateLineTotal(this)"
+                                                   step="0.01" th:name="'items[' + ${stat.index} + '].taxRate'" th:value="${item.taxRate}"
+                                                   type="number">
+                                        </td>
+                                        <td>
+                                            <input class="form-control form-control-sm text-end amount-display"
+                                                   readonly
+                                                   th:value="${#numbers.formatDecimal(item.totalAmount, 1, 2)}"
+                                                   type="text">
+                                            <input class="amount-input" th:name="'items[' + ${stat.index} + '].totalAmount'"
+                                                   th:value="${item.totalAmount}"
+                                                   type="hidden">
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="removeLineItem(this)"
+                                                    type="button">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes and Terms -->
+                    <div class="card shadow mb-3">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="notes">Notes</label>
+                                    <textarea class="form-control" id="notes" placeholder="Add any notes for the customer..." rows="4"
+                                              th:field="*{notes}"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="terms">Terms & Conditions</label>
+                                    <textarea class="form-control" id="terms" placeholder="Payment terms and conditions..." rows="4"
+                                              th:field="*{terms}"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Invoice Summary -->
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Invoice Summary</h6>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <td>Subtotal:</td>
+                                    <td class="text-end" id="subtotalDisplay">$0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Tax:</td>
+                                    <td class="text-end" id="taxDisplay">$0.00</td>
+                                </tr>
+                                <tr class="table-active fw-bold">
+                                    <td>Total:</td>
+                                    <td class="text-end" id="totalDisplay">$0.00</td>
+                                </tr>
+                                <tr th:if="${invoice.id != null && invoice.paidAmount != null && invoice.paidAmount > 0}">
+                                    <td>Paid:</td>
+                                    <td class="text-end text-success"
+                                        th:text="${#numbers.formatCurrency(invoice.paidAmount)}">$0.00
+                                    </td>
+                                </tr>
+                                <tr class="table-warning fw-bold"
+                                    th:if="${invoice.id != null && invoice.paidAmount != null && invoice.paidAmount > 0}">
+                                    <td>Balance Due:</td>
+                                    <td class="text-end"
+                                        th:text="${#numbers.formatCurrency(invoice.totalAmount - invoice.paidAmount)}">
+                                        $0.00
+                                    </td>
+                                </tr>
+                            </table>
+                            <input id="subtotal" th:field="*{subtotal}" type="hidden">
+                            <input id="taxAmount" th:field="*{taxAmount}" type="hidden">
+                            <input id="totalAmount" th:field="*{totalAmount}" type="hidden">
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="card shadow mb-3" th:if="${invoice.id != null}">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Status</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <span class="badge fs-6"
+                                      th:classappend="${invoice.status.name() == 'PAID' ? 'bg-success' :
+                                                      invoice.status.name() == 'OVERDUE' ? 'bg-danger' :
+                                                      invoice.status.name() == 'SENT' ? 'bg-info' :
+                                                      invoice.status.name() == 'CANCELLED' ? 'bg-secondary' : 'bg-warning'}"
+                                      th:text="${invoice.status}">Status</span>
+                            </div>
+                            <select class="form-select" th:field="*{status}">
+                                <option value="DRAFT">Draft</option>
+                                <option value="SENT">Sent</option>
+                                <option value="PAID">Paid</option>
+                                <option value="OVERDUE">Overdue</option>
+                                <option value="CANCELLED">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" name="action" type="submit" value="save">
+                                    <i class="bi bi-save me-2"></i>Save as Draft
+                                </button>
+                                <button class="btn btn-success" name="action" type="submit" value="send">
+                                    <i class="bi bi-send me-2"></i>Save & Send
+                                </button>
+                                <a class="btn btn-outline-secondary" th:href="@{/invoices}">
+                                    <i class="bi bi-x-circle me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script th:inline="javascript">
+        let itemIndex = /*[[${invoice.items?.size() ?: 0}]]*/ 0;
+        const availableItems = /*[[${items}]]*/ [];
+
+        function addLineItem() {
+            const tbody = document.getElementById('lineItemsBody');
+            const noItemsRow = tbody.querySelector('.no-items-row');
+            if (noItemsRow) {
+                noItemsRow.remove();
+            }
+
+            const row = document.createElement('tr');
+            row.className = 'line-item-row';
+            row.innerHTML = `
+                <td>
+                    <select class="form-select form-select-sm item-select"
+                            name="items[${itemIndex}].item.id"
+                            onchange="itemChanged(this)" required>
+                        <option value="">Select Item</option>
+                        ${availableItems.map(item => `
+                            <option value="${item.id}"
+                                    data-price="${item.salePrice}"
+                                    data-description="${item.description || ''}">
+                                ${item.name}
+                            </option>
+                        `).join('')}
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm description-input"
+                           name="items[${itemIndex}].description">
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm text-end quantity-input"
+                           name="items[${itemIndex}].quantity" value="1"
+                           min="1" step="0.01" onchange="calculateLineTotal(this)" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm text-end price-input"
+                           name="items[${itemIndex}].unitPrice" value="0.00"
+                           min="0" step="0.01" onchange="calculateLineTotal(this)" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm text-end tax-input"
+                           name="items[${itemIndex}].taxRate" value="0"
+                           min="0" max="100" step="0.01" onchange="calculateLineTotal(this)">
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm text-end amount-display"
+                           value="0.00" readonly>
+                    <input type="hidden" class="amount-input"
+                           name="items[${itemIndex}].totalAmount" value="0">
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-danger"
+                            onclick="removeLineItem(this)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+            itemIndex++;
+        }
+
+        function removeLineItem(button) {
+            const row = button.closest('tr');
+            row.remove();
+            calculateInvoiceTotal();
+
+            const tbody = document.getElementById('lineItemsBody');
+            if (tbody.querySelectorAll('.line-item-row').length === 0) {
+                tbody.innerHTML = `
+                    <tr class="no-items-row">
+                        <td colspan="7" class="text-center text-muted">
+                            No items added. Click "Add Item" to get started.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function itemChanged(select) {
+            const row = select.closest('tr');
+            const option = select.options[select.selectedIndex];
+            const price = option.getAttribute('data-price') || 0;
+            const description = option.getAttribute('data-description') || '';
+
+            row.querySelector('.price-input').value = parseFloat(price).toFixed(2);
+            row.querySelector('.description-input').value = description;
+
+            calculateLineTotal(select);
+        }
+
+        function calculateLineTotal(element) {
+            const row = element.closest('tr');
+            const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
+            const price = parseFloat(row.querySelector('.price-input').value) || 0;
+            const taxRate = parseFloat(row.querySelector('.tax-input').value) || 0;
+
+            const subtotal = quantity * price;
+            const tax = subtotal * (taxRate / 100);
+            const total = subtotal + tax;
+
+            row.querySelector('.amount-display').value = total.toFixed(2);
+            row.querySelector('.amount-input').value = total.toFixed(2);
+
+            calculateInvoiceTotal();
+        }
+
+        function calculateInvoiceTotal() {
+            let subtotal = 0;
+            let totalTax = 0;
+
+            document.querySelectorAll('.line-item-row').forEach(row => {
+                const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
+                const price = parseFloat(row.querySelector('.price-input').value) || 0;
+                const taxRate = parseFloat(row.querySelector('.tax-input').value) || 0;
+
+                const lineSubtotal = quantity * price;
+                const lineTax = lineSubtotal * (taxRate / 100);
+
+                subtotal += lineSubtotal;
+                totalTax += lineTax;
+            });
+
+            const total = subtotal + totalTax;
+
+            document.getElementById('subtotalDisplay').textContent = '$' + subtotal.toFixed(2);
+            document.getElementById('taxDisplay').textContent = '$' + totalTax.toFixed(2);
+            document.getElementById('totalDisplay').textContent = '$' + total.toFixed(2);
+
+            document.getElementById('subtotal').value = subtotal.toFixed(2);
+            document.getElementById('taxAmount').value = totalTax.toFixed(2);
+            document.getElementById('totalAmount').value = total.toFixed(2);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            calculateInvoiceTotal();
+
+            // Set default invoice date to today if new invoice
+            const invoiceDateInput = document.getElementById('invoiceDate');
+            if (!invoiceDateInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                invoiceDateInput.value = today;
+            }
+
+            // Calculate due date based on payment terms when customer changes
+            document.getElementById('customer').addEventListener('change', function () {
+                if (this.value && !document.getElementById('dueDate').value) {
+                    const invoiceDate = new Date(document.getElementById('invoiceDate').value);
+                    const dueDate = new Date(invoiceDate);
+                    dueDate.setDate(dueDate.getDate() + 30); // Default NET 30
+                    document.getElementById('dueDate').value = dueDate.toISOString().split('T')[0];
+                }
+            });
+        });
+    </script>
+</th:block>
+</body>
+</html>
