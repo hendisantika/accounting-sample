@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Items & Products</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Items & Products</h1>
+                        <p class="text-muted">Manage your inventory and services</p>
+                    </div>
+                    <a class="btn btn-primary" th:href="@{/items/new}">
+                        <i class="bi bi-plus-circle me-2"></i>New Item
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-3">
+            <div class="col-md-3 mb-3">
+                <div class="card border-left-primary shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Items</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalItems ?: 0}">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-left-success shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Products</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalProducts ?: 0}">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-left-info shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Services</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalServices ?: 0}">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card border-left-warning shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Low Stock</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${lowStockItems ?: 0}">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form class="row g-3" method="get" th:action="@{/items}">
+                            <div class="col-md-4">
+                                <label class="form-label" for="search">Search</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input class="form-control" id="search" name="search" placeholder="Search by name or code..."
+                                           th:value="${search}" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="type">Type</label>
+                                <select class="form-select" id="type" name="type">
+                                    <option value="">All Types</option>
+                                    <option th:selected="${type == 'PRODUCT'}" value="PRODUCT">Product</option>
+                                    <option th:selected="${type == 'SERVICE'}" value="SERVICE">Service</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="status">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="">All Statuses</option>
+                                    <option th:selected="${status == 'ACTIVE'}" value="ACTIVE">Active</option>
+                                    <option th:selected="${status == 'INACTIVE'}" value="INACTIVE">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button class="btn btn-primary me-2" type="submit">
+                                    <i class="bi bi-funnel me-1"></i>Filter
+                                </button>
+                                <a class="btn btn-outline-secondary" th:href="@{/items}">
+                                    <i class="bi bi-x-circle"></i>
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            Items List
+                            <span class="badge bg-secondary ms-2" th:text="${items?.totalElements ?: 0}">0</span>
+                        </h6>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="bi bi-download me-1"></i>Export
+                            </button>
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="bi bi-upload me-1"></i>Import
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="itemsTable">
+                                <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Sale Price</th>
+                                    <th>Purchase Price</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${items == null || items.isEmpty()}">
+                                    <td class="text-center text-muted py-4" colspan="9">
+                                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                        No items found
+                                    </td>
+                                </tr>
+                                <tr th:each="item : ${items}">
+                                    <td>
+                                        <code th:text="${item.code}">ITEM-001</code>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="item-icon me-2"
+                                                 th:classappend="${item.type.name() == 'PRODUCT' ? 'bg-primary' : 'bg-info'}">
+                                                <i th:class="${item.type.name() == 'PRODUCT' ? 'bi bi-box' : 'bi bi-gear'}"></i>
+                                            </div>
+                                            <div>
+                                                <a class="fw-bold text-decoration-none"
+                                                   th:href="@{/items/{id}(id=${item.id})}"
+                                                   th:text="${item.name}">Item Name</a>
+                                                <div class="text-muted small" th:if="${item.description}"
+                                                     th:text="${#strings.abbreviate(item.description, 50)}">Description
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge"
+                                              th:classappend="${item.type.name() == 'PRODUCT' ? 'bg-primary' : 'bg-info'}"
+                                              th:text="${item.type}">Type</span>
+                                    </td>
+                                    <td th:text="${item.category}">Category</td>
+                                    <td>
+                                        <span class="fw-bold text-success"
+                                              th:text="${#numbers.formatCurrency(item.salePrice)}">$0.00</span>
+                                    </td>
+                                    <td>
+                                        <span th:text="${#numbers.formatCurrency(item.purchasePrice ?: 0)}">$0.00</span>
+                                    </td>
+                                    <td>
+                                        <span th:if="${item.type.name() == 'PRODUCT'}">
+                                            <span th:classappend="${item.stockQuantity <= (item.reorderLevel ?: 0) ? 'text-danger fw-bold' : ''}"
+                                                  th:text="${item.stockQuantity}">0</span>
+                                            <span class="text-muted small" th:if="${item.unit}" th:text="${item.unit}">pcs</span>
+                                            <span class="badge bg-warning ms-1"
+                                                  th:if="${item.stockQuantity <= (item.reorderLevel ?: 0)}">
+                                                <i class="bi bi-exclamation-triangle"></i>
+                                            </span>
+                                        </span>
+                                        <span class="text-muted" th:unless="${item.type.name() == 'PRODUCT'}">N/A</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge"
+                                              th:classappend="${item.active ? 'bg-success' : 'bg-secondary'}"
+                                              th:text="${item.active ? 'Active' : 'Inactive'}">Active</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a class="btn btn-outline-primary"
+                                               th:href="@{/items/{id}(id=${item.id})}"
+                                               title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a class="btn btn-outline-warning"
+                                               th:href="@{/items/{id}/edit(id=${item.id})}"
+                                               title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button class="btn btn-outline-danger"
+                                                    th:onclick="'confirmDelete(' + ${item.id} + ', \'' + ${item.name} + '\')'"
+                                                    title="Delete"
+                                                    type="button">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav th:if="${items != null && items.totalPages > 1}">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${items.first ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                       th:href="@{/items(page=${items.number - 1}, search=${search}, type=${type}, status=${status})}">
+                                        Previous
+                                    </a>
+                                </li>
+                                <li class="page-item"
+                                    th:classappend="${i == items.number ? 'active' : ''}"
+                                    th:each="i : ${#numbers.sequence(0, items.totalPages - 1)}">
+                                    <a class="page-link"
+                                       th:href="@{/items(page=${i}, search=${search}, type=${type}, status=${status})}"
+                                       th:text="${i + 1}">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${items.last ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                       th:href="@{/items(page=${items.number + 1}, search=${search}, type=${type}, status=${status})}">
+                                        Next
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete <strong id="itemName"></strong>?</p>
+                    <p class="text-danger">This action cannot be undone and may affect existing invoices and bills.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                    <form id="deleteForm" method="post" style="display: inline;">
+                        <input name="_method" type="hidden" value="delete">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        function confirmDelete(itemId, itemName) {
+            document.getElementById('itemName').textContent = itemName;
+            document.getElementById('deleteForm').action = '/items/' + itemId;
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+    </script>
+</th:block>
+
+<style layout:fragment="styles">
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+
+    .text-xs {
+        font-size: 0.7rem;
+    }
+
+    .text-gray-800 {
+        color: #5a5c69 !important;
+    }
+
+    .item-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+    }
+</style>
+</body>
+</html>
