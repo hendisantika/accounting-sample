@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+
+    <!-- Page Specific CSS -->
+    <th:block layout:fragment="css">
+        <style>
+            .stat-card {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            .stat-icon {
+                width: 50px;
+                height: 50px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.75rem;
+                font-weight: 700;
+                color: var(--dark-color);
+            }
+
+            .stat-label {
+                font-size: 0.875rem;
+                color: #8492a6;
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-change {
+                font-size: 0.75rem;
+                font-weight: 600;
+            }
+
+            .stat-change.positive {
+                color: #10b981;
+            }
+
+            .stat-change.negative {
+                color: #ef4444;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" layout:fragment="breadcrumb">
+    <ol class="breadcrumb">
+        <li aria-current="page" class="breadcrumb-item active">Dashboard</li>
+    </ol>
+</nav>
+
+<!-- Main Content -->
+<div layout:fragment="content">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">Dashboard</h2>
+            <p class="text-muted mb-0">Welcome back! Here's what's happening with your business today.</p>
+        </div>
+        <div>
+            <select class="form-select" id="dateRangeFilter">
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option selected value="month">This Month</option>
+                <option value="quarter">This Quarter</option>
+                <option value="year">This Year</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <!-- Total Revenue -->
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <div class="stat-label">Total Revenue</div>
+                            <div class="stat-value">$125,432</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> 12.5% from last month
+                            </div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(67, 97, 238, 0.1); color: #4361ee;">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Outstanding Invoices -->
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <div class="stat-label">Outstanding Invoices</div>
+                            <div class="stat-value">$43,210</div>
+                            <div class="stat-change negative">
+                                <i class="fas fa-arrow-down"></i> 5.2% from last month
+                            </div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Expenses -->
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <div class="stat-label">Total Expenses</div>
+                            <div class="stat-value">$32,450</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-down"></i> 8.1% from last month
+                            </div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Net Profit -->
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <div class="stat-label">Net Profit</div>
+                            <div class="stat-value">$92,982</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> 15.3% from last month
+                            </div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Recent Invoices -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Invoices</h5>
+                    <a class="btn btn-sm btn-outline-primary" th:href="@{/invoices}">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><strong>INV-2024-001</strong></td>
+                                <td>Acme Corporation</td>
+                                <td>Oct 15, 2024</td>
+                                <td>$5,000.00</td>
+                                <td><span class="badge bg-success">Paid</span></td>
+                                <td>
+                                    <a class="btn btn-sm btn-link" href="#">View</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>INV-2024-002</strong></td>
+                                <td>Tech Solutions Inc</td>
+                                <td>Oct 14, 2024</td>
+                                <td>$3,250.00</td>
+                                <td><span class="badge bg-warning">Pending</span></td>
+                                <td>
+                                    <a class="btn btn-sm btn-link" href="#">View</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>INV-2024-003</strong></td>
+                                <td>Global Enterprises</td>
+                                <td>Oct 13, 2024</td>
+                                <td>$8,750.00</td>
+                                <td><span class="badge bg-danger">Overdue</span></td>
+                                <td>
+                                    <a class="btn btn-sm btn-link" href="#">View</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>INV-2024-004</strong></td>
+                                <td>Startup Labs</td>
+                                <td>Oct 12, 2024</td>
+                                <td>$2,100.00</td>
+                                <td><span class="badge bg-success">Paid</span></td>
+                                <td>
+                                    <a class="btn btn-sm btn-link" href="#">View</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>INV-2024-005</strong></td>
+                                <td>Digital Marketing Co</td>
+                                <td>Oct 11, 2024</td>
+                                <td>$4,500.00</td>
+                                <td><span class="badge bg-info">Sent</span></td>
+                                <td>
+                                    <a class="btn btn-sm btn-link" href="#">View</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Cash Flow -->
+        <div class="col-md-4">
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-primary" th:href="@{/invoices/new}">
+                            <i class="fas fa-plus me-2"></i>Create Invoice
+                        </a>
+                        <a class="btn btn-outline-primary" th:href="@{/payments/received/new}">
+                            <i class="fas fa-money-bill-wave me-2"></i>Record Payment
+                        </a>
+                        <a class="btn btn-outline-primary" th:href="@{/bills/new}">
+                            <i class="fas fa-file-alt me-2"></i>New Bill
+                        </a>
+                        <a class="btn btn-outline-primary" th:href="@{/customers/new}">
+                            <i class="fas fa-user-plus me-2"></i>Add Customer
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cash Flow Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Cash Flow Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Cash In</span>
+                            <span class="fw-bold text-success">+$125,432</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Cash Out</span>
+                            <span class="fw-bold text-danger">-$32,450</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 25%"></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Net Cash Flow</span>
+                        <span class="fw-bold text-primary">$92,982</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row g-4 mt-2">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex align-items-start">
+                            <div class="me-3">
+                                <i class="fas fa-file-invoice text-primary fa-2x"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Invoice Created</h6>
+                                <p class="mb-1 text-muted">Invoice #INV-2024-005 created for Digital Marketing Co</p>
+                                <small class="text-muted"><i class="far fa-clock"></i> 5 minutes ago</small>
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex align-items-start">
+                            <div class="me-3">
+                                <i class="fas fa-check-circle text-success fa-2x"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Payment Received</h6>
+                                <p class="mb-1 text-muted">Payment of $5,000 received from Acme Corporation</p>
+                                <small class="text-muted"><i class="far fa-clock"></i> 1 hour ago</small>
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex align-items-start">
+                            <div class="me-3">
+                                <i class="fas fa-user-plus text-info fa-2x"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">New Customer Added</h6>
+                                <p class="mb-1 text-muted">Startup Labs added to customer list</p>
+                                <small class="text-muted"><i class="far fa-clock"></i> 3 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Page Specific JavaScript -->
+<th:block layout:fragment="scripts">
+    <script>
+        $(document).ready(function () {
+            // Date range filter change handler
+            $('#dateRangeFilter').change(function () {
+                const range = $(this).val();
+                console.log('Date range changed to:', range);
+                // Add AJAX call here to fetch updated data
+            });
+
+            // Initialize tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+</th:block>
+</body>
+</html>
