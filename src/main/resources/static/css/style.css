@@ -1,0 +1,1312 @@
+/* =================================================================
+   Accounting Application - Custom CSS
+   Modern Professional Design inspired by Zoho Books
+   ================================================================= */
+
+/* =================================================================
+   1. CUSTOM COLOR SCHEME & CSS Variables
+   ================================================================= */
+:root {
+    /* Primary Colors */
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-light: #dbeafe;
+
+    /* Success Colors */
+    --success-color: #10b981;
+    --success-hover: #059669;
+    --success-light: #d1fae5;
+
+    /* Warning Colors */
+    --warning-color: #f59e0b;
+    --warning-hover: #d97706;
+    --warning-light: #fef3c7;
+
+    /* Danger Colors */
+    --danger-color: #ef4444;
+    --danger-hover: #dc2626;
+    --danger-light: #fee2e2;
+
+    /* Info Colors */
+    --info-color: #3b82f6;
+    --info-hover: #2563eb;
+    --info-light: #dbeafe;
+
+    /* Neutral Colors */
+    --dark-color: #1f2937;
+    --gray-color: #6b7280;
+    --light-gray: #f3f4f6;
+    --border-color: #e5e7eb;
+
+    /* Sidebar */
+    --sidebar-bg: #1e293b;
+    --sidebar-hover: #334155;
+    --sidebar-active: #2563eb;
+    --sidebar-text: #cbd5e1;
+    --sidebar-text-active: #ffffff;
+
+    /* Header */
+    --header-bg: #ffffff;
+    --header-border: #e5e7eb;
+    --header-height: 64px;
+
+    /* Sidebar Width */
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 70px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+    /* Transitions */
+    --transition-speed: 0.3s;
+}
+
+/* =================================================================
+   2. GLOBAL STYLES
+   ================================================================= */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--light-gray);
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* =================================================================
+   3. SIDEBAR STYLING
+   ================================================================= */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-speed) ease;
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: var(--sidebar-bg);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--sidebar-hover);
+    border-radius: 3px;
+}
+
+.sidebar-brand {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-brand h2 {
+    color: #ffffff;
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.sidebar-brand small {
+    color: var(--sidebar-text);
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Sidebar Navigation */
+.sidebar-nav {
+    padding: 20px 0;
+}
+
+.sidebar-nav-section {
+    margin-bottom: 30px;
+}
+
+.sidebar-nav-section-title {
+    color: var(--sidebar-text);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 20px 10px;
+    opacity: 0.7;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 2px;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.sidebar-nav a i {
+    width: 24px;
+    margin-right: 12px;
+    font-size: 18px;
+    text-align: center;
+}
+
+.sidebar-nav a:hover {
+    background: var(--sidebar-hover);
+    color: var(--sidebar-text-active);
+}
+
+.sidebar-nav a.active {
+    background: var(--sidebar-active);
+    color: var(--sidebar-text-active);
+    font-weight: 500;
+}
+
+.sidebar-nav a.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #ffffff;
+}
+
+/* Submenu Styling */
+.sidebar-submenu {
+    display: none;
+    padding-left: 0;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-submenu.show {
+    display: block;
+}
+
+.sidebar-submenu li a {
+    padding-left: 56px;
+    font-size: 14px;
+}
+
+.sidebar-submenu li a::before {
+    content: '\2022';
+    margin-right: 10px;
+    color: var(--sidebar-text);
+}
+
+.dropdown-toggle::after {
+    float: right;
+    margin-top: 6px;
+    transition: transform 0.2s ease;
+}
+
+.dropdown-toggle.collapsed::after {
+    transform: rotate(-90deg);
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--sidebar-hover);
+    border: none;
+    color: var(--sidebar-text);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+    background: var(--sidebar-active);
+    color: #ffffff;
+}
+
+/* Collapsed Sidebar */
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+.sidebar.collapsed .sidebar-brand h2,
+.sidebar.collapsed .sidebar-brand small,
+.sidebar.collapsed .sidebar-nav span,
+.sidebar.collapsed .sidebar-nav-section-title,
+.sidebar.collapsed .dropdown-toggle::after {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-nav a {
+    justify-content: center;
+    padding: 12px 0;
+}
+
+.sidebar.collapsed .sidebar-nav a i {
+    margin-right: 0;
+}
+
+/* =================================================================
+   4. HEADER STYLING
+   ================================================================= */
+.header {
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-width);
+    right: 0;
+    height: var(--header-height);
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--header-border);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    z-index: 999;
+    transition: left var(--transition-speed) ease;
+}
+
+.header.sidebar-collapsed {
+    left: var(--sidebar-collapsed-width);
+}
+
+/* Header Left */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+/* Header Search */
+.header-search {
+    position: relative;
+}
+
+.header-search input {
+    width: 300px;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.header-search input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.header-search i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-color);
+}
+
+/* Header Right */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-icon {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--light-gray);
+    color: var(--gray-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.header-icon:hover {
+    background: var(--primary-light);
+    color: var(--primary-color);
+}
+
+/* Notification Badge */
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--danger-color);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* User Dropdown */
+.user-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.user-dropdown:hover {
+    background: var(--light-gray);
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-color);
+}
+
+.user-info {
+    text-align: left;
+}
+
+.user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark-color);
+    display: block;
+}
+
+.user-role {
+    font-size: 12px;
+    color: var(--gray-color);
+}
+
+/* =================================================================
+   5. CONTENT AREA
+   ================================================================= */
+.content {
+    margin-left: var(--sidebar-width);
+    margin-top: var(--header-height);
+    padding: 30px;
+    min-height: calc(100vh - var(--header-height));
+    transition: margin-left var(--transition-speed) ease;
+    width: calc(100% - var(--sidebar-width));
+}
+
+.content.sidebar-collapsed {
+    margin-left: var(--sidebar-collapsed-width);
+    width: calc(100% - var(--sidebar-collapsed-width));
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: '/';
+    color: var(--gray-color);
+}
+
+.breadcrumb-item.active {
+    color: var(--gray-color);
+}
+
+/* =================================================================
+   6. CARD STYLING
+   ================================================================= */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 24px;
+    background: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px 24px;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.card-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.card-body {
+    padding: 24px;
+}
+
+.card-footer {
+    background: var(--light-gray);
+    border-top: 1px solid var(--border-color);
+    padding: 15px 24px;
+    border-radius: 0 0 12px 12px;
+}
+
+/* Stats Cards */
+.stats-card {
+    padding: 24px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.stats-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.stats-icon.primary {
+    background: var(--primary-light);
+    color: var(--primary-color);
+}
+
+.stats-icon.success {
+    background: var(--success-light);
+    color: var(--success-color);
+}
+
+.stats-icon.warning {
+    background: var(--warning-light);
+    color: var(--warning-color);
+}
+
+.stats-icon.danger {
+    background: var(--danger-light);
+    color: var(--danger-color);
+}
+
+.stats-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-bottom: 5px;
+}
+
+.stats-label {
+    font-size: 14px;
+    color: var(--gray-color);
+    margin-bottom: 10px;
+}
+
+.stats-change {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.stats-change.positive {
+    color: var(--success-color);
+}
+
+.stats-change.negative {
+    color: var(--danger-color);
+}
+
+/* =================================================================
+   7. TABLE ENHANCEMENTS
+   ================================================================= */
+.table-wrapper {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background: var(--light-gray);
+    color: var(--dark-color);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--border-color);
+    padding: 15px;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background: var(--light-gray);
+}
+
+/* Responsive Table */
+.table-responsive {
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Table Actions */
+.table-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.table-actions .btn {
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+/* =================================================================
+   8. FORM STYLING
+   ================================================================= */
+.form-label {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.form-text {
+    font-size: 12px;
+    color: var(--gray-color);
+    margin-top: 5px;
+}
+
+.input-group-text {
+    background: var(--light-gray);
+    border: 1px solid var(--border-color);
+    color: var(--gray-color);
+}
+
+/* =================================================================
+   9. BUTTON STYLING
+   ================================================================= */
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-success {
+    background: var(--success-color);
+    color: #ffffff;
+}
+
+.btn-success:hover {
+    background: var(--success-hover);
+}
+
+.btn-warning {
+    background: var(--warning-color);
+    color: #ffffff;
+}
+
+.btn-warning:hover {
+    background: var(--warning-hover);
+}
+
+.btn-danger {
+    background: var(--danger-color);
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background: var(--danger-hover);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color);
+    color: #ffffff;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+.btn-lg {
+    padding: 12px 24px;
+    font-size: 16px;
+}
+
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =================================================================
+   10. STATUS BADGES
+   ================================================================= */
+.badge {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Invoice Status Badges */
+.badge-draft {
+    background: var(--gray-color);
+    color: #ffffff;
+}
+
+.badge-sent {
+    background: var(--info-color);
+    color: #ffffff;
+}
+
+.badge-viewed {
+    background: #8b5cf6;
+    color: #ffffff;
+}
+
+.badge-partial {
+    background: var(--warning-color);
+    color: #ffffff;
+}
+
+.badge-paid {
+    background: var(--success-color);
+    color: #ffffff;
+}
+
+.badge-overdue {
+    background: var(--danger-color);
+    color: #ffffff;
+}
+
+.badge-void {
+    background: #1f2937;
+    color: #ffffff;
+}
+
+.badge-cancelled {
+    background: #64748b;
+    color: #ffffff;
+}
+
+/* Payment Status Badges */
+.badge-pending {
+    background: var(--warning-light);
+    color: var(--warning-color);
+}
+
+.badge-completed {
+    background: var(--success-light);
+    color: var(--success-color);
+}
+
+.badge-failed {
+    background: var(--danger-light);
+    color: var(--danger-color);
+}
+
+/* General Status Badges */
+.badge-active {
+    background: var(--success-light);
+    color: var(--success-color);
+}
+
+.badge-inactive {
+    background: var(--danger-light);
+    color: var(--danger-color);
+}
+
+.badge-suspended {
+    background: var(--warning-light);
+    color: var(--warning-color);
+}
+
+/* =================================================================
+   11. ALERT STYLING
+   ================================================================= */
+.alert {
+    border: none;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.alert i {
+    font-size: 20px;
+}
+
+.alert-primary {
+    background: var(--primary-light);
+    color: var(--primary-color);
+}
+
+.alert-success {
+    background: var(--success-light);
+    color: var(--success-color);
+}
+
+.alert-warning {
+    background: var(--warning-light);
+    color: var(--warning-color);
+}
+
+.alert-danger {
+    background: var(--danger-light);
+    color: var(--danger-color);
+}
+
+.alert-info {
+    background: var(--info-light);
+    color: var(--info-color);
+}
+
+/* =================================================================
+   12. MODAL STYLING
+   ================================================================= */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px 24px;
+    background: var(--light-gray);
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 15px 24px;
+}
+
+/* =================================================================
+   13. DROPDOWN STYLING
+   ================================================================= */
+.dropdown-menu {
+    border: none;
+    border-radius: 10px;
+    box-shadow: var(--shadow-lg);
+    padding: 8px;
+    margin-top: 8px;
+}
+
+.dropdown-item {
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: var(--light-gray);
+}
+
+.dropdown-divider {
+    margin: 8px 0;
+    border-color: var(--border-color);
+}
+
+/* =================================================================
+   14. PAGINATION STYLING
+   ================================================================= */
+.pagination {
+    gap: 5px;
+}
+
+.page-link {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--dark-color);
+    padding: 8px 14px;
+    transition: all 0.2s ease;
+}
+
+.page-link:hover {
+    background: var(--primary-light);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.page-item.active .page-link {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.page-item.disabled .page-link {
+    background: var(--light-gray);
+    border-color: var(--border-color);
+    color: var(--gray-color);
+}
+
+/* =================================================================
+   15. UTILITY CLASSES
+   ================================================================= */
+
+/* Custom Spacing */
+.mt-30 {
+    margin-top: 30px;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+.pt-30 {
+    padding-top: 30px;
+}
+
+.pb-30 {
+    padding-bottom: 30px;
+}
+
+/* Text Colors */
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.text-success {
+    color: var(--success-color) !important;
+}
+
+.text-warning {
+    color: var(--warning-color) !important;
+}
+
+.text-danger {
+    color: var(--danger-color) !important;
+}
+
+.text-info {
+    color: var(--info-color) !important;
+}
+
+.text-gray {
+    color: var(--gray-color) !important;
+}
+
+/* Background Colors */
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.bg-success {
+    background-color: var(--success-color) !important;
+}
+
+.bg-warning {
+    background-color: var(--warning-color) !important;
+}
+
+.bg-danger {
+    background-color: var(--danger-color) !important;
+}
+
+.bg-info {
+    background-color: var(--info-color) !important;
+}
+
+.bg-light-gray {
+    background-color: var(--light-gray) !important;
+}
+
+/* Border Utilities */
+.border-radius-8 {
+    border-radius: 8px;
+}
+
+.border-radius-12 {
+    border-radius: 12px;
+}
+
+.border-radius-50 {
+    border-radius: 50%;
+}
+
+/* Shadow Utilities */
+.shadow-sm {
+    box-shadow: var(--shadow-sm);
+}
+
+.shadow-md {
+    box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+    box-shadow: var(--shadow-lg);
+}
+
+/* Display Utilities */
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* =================================================================
+   16. RESPONSIVE DESIGN
+   ================================================================= */
+
+/* Tablet and Below */
+@media (max-width: 991px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .header {
+        left: 0;
+    }
+
+    .content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .header-search input {
+        width: 200px;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: var(--dark-color);
+        cursor: pointer;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .content {
+        padding: 20px 15px;
+    }
+
+    .header {
+        padding: 0 15px;
+    }
+
+    .header-search {
+        display: none;
+    }
+
+    .page-title {
+        font-size: 18px;
+    }
+
+    .stats-card {
+        padding: 20px;
+    }
+
+    .stats-value {
+        font-size: 24px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .table thead th,
+    .table tbody td {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .user-info {
+        display: none;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 575px) {
+    .header-right {
+        gap: 10px;
+    }
+
+    .table-actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+}
+
+/* =================================================================
+   17. PRINT STYLES
+   ================================================================= */
+@media print {
+    .sidebar,
+    .header,
+    .btn,
+    .table-actions,
+    .no-print {
+        display: none !important;
+    }
+
+    .content {
+        margin-left: 0;
+        margin-top: 0;
+        padding: 0;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid var(--border-color);
+    }
+}
+
+/* =================================================================
+   18. CUSTOM SCROLLBAR
+   ================================================================= */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light-gray);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-color);
+}
+
+/* =================================================================
+   19. LOADING SPINNER
+   ================================================================= */
+.spinner {
+    border: 3px solid var(--light-gray);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner-sm {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+}
+
+/* =================================================================
+   20. TOOLTIP STYLING
+   ================================================================= */
+.tooltip-inner {
+    background: var(--dark-color);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+/* =================================================================
+   21. CHART CONTAINER
+   ================================================================= */
+.chart-container {
+    position: relative;
+    height: 300px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* =================================================================
+   22. EMPTY STATE
+   ================================================================= */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state-icon {
+    font-size: 64px;
+    color: var(--gray-color);
+    opacity: 0.5;
+    margin-bottom: 20px;
+}
+
+.empty-state-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 10px;
+}
+
+.empty-state-text {
+    font-size: 14px;
+    color: var(--gray-color);
+    margin-bottom: 20px;
+}
+
+/* =================================================================
+   23. FILE UPLOAD
+   ================================================================= */
+.file-upload {
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.file-upload:hover {
+    border-color: var(--primary-color);
+    background: var(--primary-light);
+}
+
+.file-upload-icon {
+    font-size: 48px;
+    color: var(--gray-color);
+    margin-bottom: 15px;
+}
+
+.file-upload-text {
+    font-size: 14px;
+    color: var(--gray-color);
+}
+
+/* =================================================================
+   END OF CUSTOM CSS
+   ================================================================= */
