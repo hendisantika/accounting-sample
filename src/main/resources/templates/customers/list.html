@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customers</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Customers</h1>
+                        <p class="text-muted">Manage your customer database</p>
+                    </div>
+                    <a class="btn btn-primary" th:href="@{/customers/new}">
+                        <i class="bi bi-person-plus me-2"></i>New Customer
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form class="row g-3" method="get" th:action="@{/customers}">
+                            <div class="col-md-4">
+                                <label class="form-label" for="search">Search</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input class="form-control" id="search" name="search" placeholder="Search by name, email, or phone..."
+                                           th:value="${search}" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="status">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="">All Statuses</option>
+                                    <option th:selected="${status == 'ACTIVE'}" value="ACTIVE">Active</option>
+                                    <option th:selected="${status == 'INACTIVE'}" value="INACTIVE">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="sortBy">Sort By</label>
+                                <select class="form-select" id="sortBy" name="sortBy">
+                                    <option th:selected="${sortBy == 'name'}" value="name">Name</option>
+                                    <option th:selected="${sortBy == 'createdAt'}" value="createdAt">Date Created
+                                    </option>
+                                    <option th:selected="${sortBy == 'balance'}" value="balance">Outstanding Balance
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button class="btn btn-primary me-2" type="submit">
+                                    <i class="bi bi-funnel me-1"></i>Filter
+                                </button>
+                                <a class="btn btn-outline-secondary" th:href="@{/customers}">
+                                    <i class="bi bi-x-circle"></i>
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            Customer List
+                            <span class="badge bg-secondary ms-2" th:text="${customers?.totalElements ?: 0}">0</span>
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="customersTable">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Outstanding Balance</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${customers == null || customers.isEmpty()}">
+                                    <td class="text-center text-muted py-4" colspan="6">
+                                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                        No customers found
+                                    </td>
+                                </tr>
+                                <tr th:each="customer : ${customers}">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-circle me-2">
+                                                <span th:text="${#strings.substring(customer.name, 0, 1)}">A</span>
+                                            </div>
+                                            <div>
+                                                <a class="fw-bold text-decoration-none"
+                                                   th:href="@{/customers/{id}(id=${customer.id})}"
+                                                   th:text="${customer.name}">Customer Name</a>
+                                                <div class="text-muted small" th:if="${customer.company}"
+                                                     th:text="${customer.company}">Company
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a th:href="'mailto:' + ${customer.email}" th:text="${customer.email}">email@example.com</a>
+                                    </td>
+                                    <td th:text="${customer.phone}">+1234567890</td>
+                                    <td>
+                                        <span class="fw-bold"
+                                              th:classappend="${customer.balance > 0 ? 'text-danger' : 'text-success'}"
+                                              th:text="${#numbers.formatCurrency(customer.balance ?: 0)}">$0.00</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge"
+                                              th:classappend="${customer.active ? 'bg-success' : 'bg-secondary'}"
+                                              th:text="${customer.active ? 'Active' : 'Inactive'}">Active</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a class="btn btn-outline-primary"
+                                               th:href="@{/customers/{id}(id=${customer.id})}"
+                                               title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a class="btn btn-outline-warning"
+                                               th:href="@{/customers/{id}/edit(id=${customer.id})}"
+                                               title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button class="btn btn-outline-danger"
+                                                    th:onclick="'confirmDelete(' + ${customer.id} + ', \'' + ${customer.name} + '\')'"
+                                                    title="Delete"
+                                                    type="button">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav th:if="${customers != null && customers.totalPages > 1}">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${customers.first ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                       th:href="@{/customers(page=${customers.number - 1}, search=${search}, status=${status}, sortBy=${sortBy})}">
+                                        Previous
+                                    </a>
+                                </li>
+                                <li class="page-item"
+                                    th:classappend="${i == customers.number ? 'active' : ''}"
+                                    th:each="i : ${#numbers.sequence(0, customers.totalPages - 1)}">
+                                    <a class="page-link"
+                                       th:href="@{/customers(page=${i}, search=${search}, status=${status}, sortBy=${sortBy})}"
+                                       th:text="${i + 1}">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${customers.last ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                       th:href="@{/customers(page=${customers.number + 1}, search=${search}, status=${status}, sortBy=${sortBy})}">
+                                        Next
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete <strong id="customerName"></strong>?</p>
+                    <p class="text-danger">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                    <form id="deleteForm" method="post" style="display: inline;">
+                        <input name="_method" type="hidden" value="delete">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        function confirmDelete(customerId, customerName) {
+            document.getElementById('customerName').textContent = customerName;
+            document.getElementById('deleteForm').action = '/customers/' + customerId;
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+    </script>
+</th:block>
+
+<style layout:fragment="styles">
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        background-color: #4e73df;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+</style>
+</body>
+</html>
