@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sidebar</title>
+</head>
+<body>
+<!-- Sidebar Fragment -->
+<aside class="main-sidebar" th:fragment="sidebar">
+    <!-- Logo -->
+    <div class="sidebar-logo">
+        <a style="text-decoration: none;" th:href="@{/}">
+            <i class="fas fa-calculator text-primary" style="font-size: 2rem;"></i>
+            <h4 class="mt-2">Accounting Pro</h4>
+        </a>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="sidebar-menu">
+        <!-- Dashboard -->
+        <div class="menu-item">
+            <a class="menu-link" th:href="@{/}">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
+
+        <!-- Sales Section -->
+        <div class="menu-section-title" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_SALES', 'ROLE_ACCOUNTANT')">
+            Sales
+        </div>
+
+        <!-- Customers -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_SALES', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" th:href="@{/customers}">
+                <i class="fas fa-users"></i>
+                <span>Customers</span>
+            </a>
+        </div>
+
+        <!-- Invoices -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_SALES', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" data-toggle="submenu" href="#">
+                <i class="fas fa-file-invoice"></i>
+                <span>Invoices</span>
+                <i class="fas fa-chevron-right dropdown-icon"></i>
+            </a>
+            <div class="submenu">
+                <a class="menu-link" th:href="@{/invoices}">
+                    <i class="fas fa-list"></i>
+                    <span>All Invoices</span>
+                </a>
+                <a class="menu-link" th:href="@{/invoices/new}">
+                    <i class="fas fa-plus"></i>
+                    <span>New Invoice</span>
+                </a>
+                <a class="menu-link" th:href="@{/invoices/recurring}">
+                    <i class="fas fa-redo"></i>
+                    <span>Recurring Invoices</span>
+                </a>
+                <a class="menu-link" th:href="@{/invoices/overdue}">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Overdue Invoices</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sales Orders -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_SALES')">
+            <a class="menu-link" th:href="@{/sales-orders}">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Sales Orders</span>
+            </a>
+        </div>
+
+        <!-- Payments Received -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_SALES', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" th:href="@{/payments/received}">
+                <i class="fas fa-hand-holding-usd"></i>
+                <span>Payments Received</span>
+            </a>
+        </div>
+
+        <!-- Credit Notes -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_SALES', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" th:href="@{/credit-notes}">
+                <i class="fas fa-file-alt"></i>
+                <span>Credit Notes</span>
+            </a>
+        </div>
+
+        <!-- Purchases Section -->
+        <div class="menu-section-title"
+             sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_PURCHASE', 'ROLE_ACCOUNTANT')">
+            Purchases
+        </div>
+
+        <!-- Vendors -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_PURCHASE', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" th:href="@{/vendors}">
+                <i class="fas fa-building"></i>
+                <span>Vendors</span>
+            </a>
+        </div>
+
+        <!-- Bills -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_PURCHASE', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" data-toggle="submenu" href="#">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Bills</span>
+                <i class="fas fa-chevron-right dropdown-icon"></i>
+            </a>
+            <div class="submenu">
+                <a class="menu-link" th:href="@{/bills}">
+                    <i class="fas fa-list"></i>
+                    <span>All Bills</span>
+                </a>
+                <a class="menu-link" th:href="@{/bills/new}">
+                    <i class="fas fa-plus"></i>
+                    <span>New Bill</span>
+                </a>
+                <a class="menu-link" th:href="@{/bills/recurring}">
+                    <i class="fas fa-redo"></i>
+                    <span>Recurring Bills</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Purchase Orders -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_PURCHASE')">
+            <a class="menu-link" th:href="@{/purchase-orders}">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Purchase Orders</span>
+            </a>
+        </div>
+
+        <!-- Payments Made -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_PURCHASE', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" th:href="@{/payments/made}">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Payments Made</span>
+            </a>
+        </div>
+
+        <!-- Vendor Credits -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_PURCHASE', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" th:href="@{/vendor-credits}">
+                <i class="fas fa-receipt"></i>
+                <span>Vendor Credits</span>
+            </a>
+        </div>
+
+        <!-- Accounting Section -->
+        <div class="menu-section-title" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_ACCOUNTANT')">
+            Accounting
+        </div>
+
+        <!-- Chart of Accounts -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" th:href="@{/accounts}">
+                <i class="fas fa-chart-pie"></i>
+                <span>Chart of Accounts</span>
+            </a>
+        </div>
+
+        <!-- Journal Entries -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" th:href="@{/journal-entries}">
+                <i class="fas fa-book"></i>
+                <span>Journal Entries</span>
+            </a>
+        </div>
+
+        <!-- Bank Accounts -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" data-toggle="submenu" href="#">
+                <i class="fas fa-university"></i>
+                <span>Banking</span>
+                <i class="fas fa-chevron-right dropdown-icon"></i>
+            </a>
+            <div class="submenu">
+                <a class="menu-link" th:href="@{/banks}">
+                    <i class="fas fa-list"></i>
+                    <span>Bank Accounts</span>
+                </a>
+                <a class="menu-link" th:href="@{/banks/transactions}">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Transactions</span>
+                </a>
+                <a class="menu-link" th:href="@{/banks/reconciliation}">
+                    <i class="fas fa-balance-scale"></i>
+                    <span>Reconciliation</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Tax Management -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" th:href="@{/taxes}">
+                <i class="fas fa-percent"></i>
+                <span>Taxes</span>
+            </a>
+        </div>
+
+        <!-- Items Section -->
+        <div class="menu-section-title">
+            Inventory
+        </div>
+
+        <!-- Items/Products -->
+        <div class="menu-item"
+             sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_SALES', 'ROLE_PURCHASE', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" data-toggle="submenu" href="#">
+                <i class="fas fa-box"></i>
+                <span>Items</span>
+                <i class="fas fa-chevron-right dropdown-icon"></i>
+            </a>
+            <div class="submenu">
+                <a class="menu-link" th:href="@{/items}">
+                    <i class="fas fa-list"></i>
+                    <span>All Items</span>
+                </a>
+                <a class="menu-link" th:href="@{/items/new}">
+                    <i class="fas fa-plus"></i>
+                    <span>New Item</span>
+                </a>
+                <a class="menu-link" th:href="@{/items/categories}">
+                    <i class="fas fa-tags"></i>
+                    <span>Categories</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Inventory Adjustments -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" th:href="@{/inventory/adjustments}">
+                <i class="fas fa-sliders-h"></i>
+                <span>Adjustments</span>
+            </a>
+        </div>
+
+        <!-- Reports Section -->
+        <div class="menu-section-title">
+            Reports
+        </div>
+
+        <!-- Reports -->
+        <div class="menu-item">
+            <a class="menu-link" data-toggle="submenu" href="#">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reports</span>
+                <i class="fas fa-chevron-right dropdown-icon"></i>
+            </a>
+            <div class="submenu">
+                <a class="menu-link" th:href="@{/reports/profit-loss}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Profit & Loss</span>
+                </a>
+                <a class="menu-link" th:href="@{/reports/balance-sheet}">
+                    <i class="fas fa-balance-scale"></i>
+                    <span>Balance Sheet</span>
+                </a>
+                <a class="menu-link" th:href="@{/reports/cash-flow}">
+                    <i class="fas fa-stream"></i>
+                    <span>Cash Flow</span>
+                </a>
+                <a class="menu-link" th:href="@{/reports/trial-balance}">
+                    <i class="fas fa-calculator"></i>
+                    <span>Trial Balance</span>
+                </a>
+                <a class="menu-link" th:href="@{/reports/aged-receivables}">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>Aged Receivables</span>
+                </a>
+                <a class="menu-link" th:href="@{/reports/aged-payables}">
+                    <i class="fas fa-hourglass-end"></i>
+                    <span>Aged Payables</span>
+                </a>
+                <a class="menu-link" th:href="@{/reports/sales}">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Sales Report</span>
+                </a>
+                <a class="menu-link" th:href="@{/reports/purchases}">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Purchase Report</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="menu-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_ACCOUNTANT')">
+            <a class="menu-link" th:href="@{/analytics}">
+                <i class="fas fa-analytics"></i>
+                <span>Analytics</span>
+            </a>
+        </div>
+
+        <!-- Settings Section -->
+        <div class="menu-section-title" sec:authorize="hasRole('ADMIN')">
+            Configuration
+        </div>
+
+        <!-- Settings -->
+        <div class="menu-item" sec:authorize="hasRole('ADMIN')">
+            <a class="menu-link" data-toggle="submenu" href="#">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+                <i class="fas fa-chevron-right dropdown-icon"></i>
+            </a>
+            <div class="submenu">
+                <a class="menu-link" th:href="@{/settings/organization}">
+                    <i class="fas fa-building"></i>
+                    <span>Organization</span>
+                </a>
+                <a class="menu-link" th:href="@{/settings/users}">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Users & Roles</span>
+                </a>
+                <a class="menu-link" th:href="@{/settings/preferences}">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Preferences</span>
+                </a>
+                <a class="menu-link" th:href="@{/settings/templates}">
+                    <i class="fas fa-file-code"></i>
+                    <span>Templates</span>
+                </a>
+                <a class="menu-link" th:href="@{/settings/currencies}">
+                    <i class="fas fa-coins"></i>
+                    <span>Currencies</span>
+                </a>
+                <a class="menu-link" th:href="@{/settings/payment-methods}">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Payment Methods</span>
+                </a>
+                <a class="menu-link" th:href="@{/settings/email}">
+                    <i class="fas fa-envelope"></i>
+                    <span>Email Settings</span>
+                </a>
+                <a class="menu-link" th:href="@{/settings/integrations}">
+                    <i class="fas fa-plug"></i>
+                    <span>Integrations</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Audit Log -->
+        <div class="menu-item" sec:authorize="hasRole('ADMIN')">
+            <a class="menu-link" th:href="@{/audit-log}">
+                <i class="fas fa-history"></i>
+                <span>Audit Log</span>
+            </a>
+        </div>
+
+        <!-- Support Section -->
+        <div class="menu-section-title">
+            Help
+        </div>
+
+        <!-- Help & Support -->
+        <div class="menu-item">
+            <a class="menu-link" th:href="@{/help}">
+                <i class="fas fa-question-circle"></i>
+                <span>Help Center</span>
+            </a>
+        </div>
+
+        <!-- Documentation -->
+        <div class="menu-item">
+            <a class="menu-link" target="_blank" th:href="@{/docs}">
+                <i class="fas fa-book-open"></i>
+                <span>Documentation</span>
+            </a>
+        </div>
+    </nav>
+</aside>
+</body>
+</html>
