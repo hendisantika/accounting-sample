@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${customer.id == null ? 'New Customer' : 'Edit Customer'}">Customer</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/customers}">Customers</a></li>
+                        <li class="breadcrumb-item active" th:text="${customer.id == null ? 'New' : 'Edit'}">New</li>
+                    </ol>
+                </nav>
+                <h1 class="h3 mb-0" th:text="${customer.id == null ? 'New Customer' : 'Edit Customer'}">Customer</h1>
+            </div>
+        </div>
+
+        <form method="post"
+              th:action="${customer.id == null ? '/customers' : '/customers/' + customer.id}"
+              th:object="${customer}">
+            <input name="_method" th:if="${customer.id != null}" type="hidden" value="put">
+
+            <div class="row">
+                <!-- Main Form -->
+                <div class="col-lg-8 mb-3">
+                    <!-- Basic Information -->
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Basic Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="name">Name <span class="text-danger">*</span></label>
+                                    <input class="form-control" id="name" required th:field="*{name}" type="text">
+                                    <div class="invalid-feedback" th:errors="*{name}"
+                                         th:if="${#fields.hasErrors('name')}">
+                                        Name is required
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="company">Company</label>
+                                    <input class="form-control" id="company" th:field="*{company}" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Contact Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="email">Email <span
+                                            class="text-danger">*</span></label>
+                                    <input class="form-control" id="email" required th:field="*{email}" type="email">
+                                    <div class="invalid-feedback" th:errors="*{email}"
+                                         th:if="${#fields.hasErrors('email')}">
+                                        Valid email is required
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="phone">Phone</label>
+                                    <input class="form-control" id="phone" th:field="*{phone}" type="tel">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="mobile">Mobile</label>
+                                    <input class="form-control" id="mobile" th:field="*{mobile}" type="tel">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="website">Website</label>
+                                    <input class="form-control" id="website" placeholder="https://example.com" th:field="*{website}"
+                                           type="url">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Billing Address -->
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Billing Address</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label" for="billingAddress">Street Address</label>
+                                    <input class="form-control" id="billingAddress" th:field="*{billingAddress}"
+                                           type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="billingCity">City</label>
+                                    <input class="form-control" id="billingCity" th:field="*{billingCity}" type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="billingState">State/Province</label>
+                                    <input class="form-control" id="billingState" th:field="*{billingState}"
+                                           type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="billingZip">ZIP/Postal Code</label>
+                                    <input class="form-control" id="billingZip" th:field="*{billingZip}" type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="billingCountry">Country</label>
+                                    <input class="form-control" id="billingCountry" th:field="*{billingCountry}"
+                                           type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Address -->
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold text-primary">Shipping Address</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" id="sameAsBilling" type="checkbox">
+                                <label class="form-check-label" for="sameAsBilling">
+                                    Same as billing
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label" for="shippingAddress">Street Address</label>
+                                    <input class="form-control" id="shippingAddress" th:field="*{shippingAddress}"
+                                           type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="shippingCity">City</label>
+                                    <input class="form-control" id="shippingCity" th:field="*{shippingCity}"
+                                           type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="shippingState">State/Province</label>
+                                    <input class="form-control" id="shippingState" th:field="*{shippingState}"
+                                           type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="shippingZip">ZIP/Postal Code</label>
+                                    <input class="form-control" id="shippingZip" th:field="*{shippingZip}" type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="shippingCountry">Country</label>
+                                    <input class="form-control" id="shippingCountry" th:field="*{shippingCountry}"
+                                           type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Additional Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label" for="notes">Notes</label>
+                                    <textarea class="form-control" id="notes" placeholder="Add any additional notes about this customer..." rows="4"
+                                              th:field="*{notes}"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Payment Terms -->
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Payment Terms</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label" for="paymentTerms">Default Payment Terms</label>
+                                <select class="form-select" id="paymentTerms" th:field="*{paymentTerms}">
+                                    <option value="NET_15">Net 15</option>
+                                    <option selected value="NET_30">Net 30</option>
+                                    <option value="NET_45">Net 45</option>
+                                    <option value="NET_60">Net 60</option>
+                                    <option value="DUE_ON_RECEIPT">Due on Receipt</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="taxExempt">Tax Status</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="taxExempt" th:field="*{taxExempt}"
+                                           type="checkbox">
+                                    <label class="form-check-label" for="taxExempt">
+                                        Tax Exempt
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3" th:if="${customer.id != null}">
+                                <label class="form-label">Current Balance</label>
+                                <div class="h4 mb-0"
+                                     th:classappend="${customer.balance > 0 ? 'text-danger' : 'text-success'}"
+                                     th:text="${#numbers.formatCurrency(customer.balance ?: 0)}">$0.00
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Status</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check form-switch">
+                                <input checked class="form-check-input" id="active"
+                                       th:field="*{active}" type="checkbox">
+                                <label class="form-check-label" for="active">
+                                    Active Customer
+                                </label>
+                            </div>
+                            <small class="text-muted">
+                                Inactive customers won't appear in customer dropdowns
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-save me-2"></i>Save Customer
+                                </button>
+                                <a class="btn btn-outline-secondary" th:href="@{/customers}">
+                                    <i class="bi bi-x-circle me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        // Copy billing address to shipping address
+        document.getElementById('sameAsBilling').addEventListener('change', function () {
+            if (this.checked) {
+                document.getElementById('shippingAddress').value = document.getElementById('billingAddress').value;
+                document.getElementById('shippingCity').value = document.getElementById('billingCity').value;
+                document.getElementById('shippingState').value = document.getElementById('billingState').value;
+                document.getElementById('shippingZip').value = document.getElementById('billingZip').value;
+                document.getElementById('shippingCountry').value = document.getElementById('billingCountry').value;
+            }
+        });
+    </script>
+</th:block>
+</body>
+</html>
