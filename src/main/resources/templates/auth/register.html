@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Register - Accounting System</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px 0;
+        }
+
+        .register-container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-body {
+            padding: 40px;
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+
+        .invalid-feedback {
+            display: block;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+
+        .login-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        h2 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #667eea;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .required-mark {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <div class="card">
+        <div class="card-body">
+            <!-- Logo -->
+            <div class="logo-placeholder">
+                <i class="bi bi-calculator-fill"></i>
+            </div>
+
+            <!-- Title -->
+            <h2 class="text-center">Create Account</h2>
+            <p class="text-center subtitle">Register your organization</p>
+
+            <!-- Error Messages Display -->
+            <div class="alert alert-danger" role="alert" th:if="${error}">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="${error}">Registration error</span>
+            </div>
+
+            <div class="alert alert-success" role="alert" th:if="${message}">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${message}">Success message</span>
+            </div>
+
+            <!-- Registration Form -->
+            <form method="post" th:action="@{/register}" th:object="${registerForm}">
+
+                <!-- Organization Information Section -->
+                <div class="section-title">
+                    <i class="bi bi-building me-2"></i>Organization Information
+                </div>
+
+                <!-- Organization Name -->
+                <div class="mb-3">
+                    <label class="form-label" for="organizationName">
+                        Organization Name <span class="required-mark">*</span>
+                    </label>
+                    <input autofocus
+                           class="form-control"
+                           id="organizationName"
+                           placeholder="Enter organization name"
+                           required
+                           th:classappend="${#fields.hasErrors('organizationName')} ? 'is-invalid' : ''"
+                           th:field="*{organizationName}"
+                           type="text">
+                    <div class="invalid-feedback" th:errors="*{organizationName}"
+                         th:if="${#fields.hasErrors('organizationName')}">
+                        Organization name error
+                    </div>
+                </div>
+
+                <!-- User Information Section -->
+                <div class="section-title">
+                    <i class="bi bi-person me-2"></i>User Information
+                </div>
+
+                <!-- First Name and Last Name Row -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="firstName">
+                            First Name <span class="required-mark">*</span>
+                        </label>
+                        <input class="form-control"
+                               id="firstName"
+                               placeholder="First name"
+                               required
+                               th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''"
+                               th:field="*{firstName}"
+                               type="text">
+                        <div class="invalid-feedback" th:errors="*{firstName}"
+                             th:if="${#fields.hasErrors('firstName')}">
+                            First name error
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="lastName">
+                            Last Name <span class="required-mark">*</span>
+                        </label>
+                        <input class="form-control"
+                               id="lastName"
+                               placeholder="Last name"
+                               required
+                               th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''"
+                               th:field="*{lastName}"
+                               type="text">
+                        <div class="invalid-feedback" th:errors="*{lastName}" th:if="${#fields.hasErrors('lastName')}">
+                            Last name error
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label class="form-label" for="email">
+                        <i class="bi bi-envelope me-1"></i>Email Address <span class="required-mark">*</span>
+                    </label>
+                    <input class="form-control"
+                           id="email"
+                           placeholder="your.email@example.com"
+                           required
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                           th:field="*{email}"
+                           type="email">
+                    <div class="invalid-feedback" th:errors="*{email}" th:if="${#fields.hasErrors('email')}">
+                        Email error
+                    </div>
+                </div>
+
+                <!-- Password and Confirm Password Row -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="password">
+                            <i class="bi bi-lock me-1"></i>Password <span class="required-mark">*</span>
+                        </label>
+                        <input class="form-control"
+                               id="password"
+                               placeholder="Min. 8 characters"
+                               required
+                               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                               th:field="*{password}"
+                               type="password">
+                        <div class="invalid-feedback" th:errors="*{password}" th:if="${#fields.hasErrors('password')}">
+                            Password error
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="confirmPassword">
+                            <i class="bi bi-lock-fill me-1"></i>Confirm Password <span class="required-mark">*</span>
+                        </label>
+                        <input class="form-control"
+                               id="confirmPassword"
+                               placeholder="Repeat password"
+                               required
+                               th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''"
+                               th:field="*{confirmPassword}"
+                               type="password">
+                        <div class="invalid-feedback" th:errors="*{confirmPassword}"
+                             th:if="${#fields.hasErrors('confirmPassword')}">
+                            Confirm password error
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information Section -->
+                <div class="section-title">
+                    <i class="bi bi-telephone me-2"></i>Contact Information
+                </div>
+
+                <!-- Phone and Country Row -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="phone">
+                            <i class="bi bi-phone me-1"></i>Phone Number
+                        </label>
+                        <input class="form-control"
+                               id="phone"
+                               placeholder="+1 234 567 8900"
+                               th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"
+                               th:field="*{phone}"
+                               type="tel">
+                        <div class="invalid-feedback" th:errors="*{phone}" th:if="${#fields.hasErrors('phone')}">
+                            Phone error
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="country">
+                            <i class="bi bi-globe me-1"></i>Country <span class="required-mark">*</span>
+                        </label>
+                        <select class="form-select"
+                                id="country"
+                                required
+                                th:classappend="${#fields.hasErrors('country')} ? 'is-invalid' : ''"
+                                th:field="*{country}">
+                            <option value="">Select country</option>
+                            <option value="US">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="CA">Canada</option>
+                            <option value="AU">Australia</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="JP">Japan</option>
+                            <option value="CN">China</option>
+                            <option value="IN">India</option>
+                            <option value="BR">Brazil</option>
+                            <option value="ID">Indonesia</option>
+                            <option value="MY">Malaysia</option>
+                            <option value="SG">Singapore</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                        <div class="invalid-feedback" th:errors="*{country}" th:if="${#fields.hasErrors('country')}">
+                            Country error
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register Button -->
+                <button class="btn btn-register mt-3" type="submit">
+                    <i class="bi bi-person-plus me-2"></i>Create Account
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <hr class="my-4">
+
+            <!-- Login Link -->
+            <p class="text-center mb-0">
+                Already have an account?
+                <a class="login-link" th:href="@{/login}">Sign in here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <p class="text-center mt-4 text-white">
+        <small>&copy; 2024 Accounting System. All rights reserved.</small>
+    </p>
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
