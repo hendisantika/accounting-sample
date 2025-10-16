@@ -43,42 +43,29 @@ public class Item extends BaseEntity {
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
-    @NotBlank
-    @Column(nullable = false)
-    private String name;
-
-    @NotBlank
-    @Column(nullable = false)
+    @Column(name = "item_code", nullable = false)
     private String code;
 
     @NotBlank
-    @Column(nullable = false)
-    private String sku;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "item_name", nullable = false)
+    private String name;
 
     @Enumerated(EnumType.STRING)
     @NotNull
     @Column(name = "item_type", nullable = false)
     private ItemType itemType;
 
-    @Column(length = 50)
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "unit_of_measure", length = 50)
     private String unit;
 
-    @Column(name = "sale_price", precision = 15, scale = 2)
+    @Column(name = "sales_price", precision = 19, scale = 4)
     private BigDecimal salePrice;
 
-    @Column(name = "purchase_price", precision = 15, scale = 2)
+    @Column(name = "purchase_price", precision = 19, scale = 4)
     private BigDecimal purchasePrice;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sales_tax_id")
-    private Tax salesTax;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purchase_tax_id")
-    private Tax purchaseTax;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sales_account_id")
@@ -92,18 +79,35 @@ public class Item extends BaseEntity {
     @JoinColumn(name = "inventory_account_id")
     private Account inventoryAccount;
 
-    @Column(name = "track_inventory", nullable = false)
-    @Builder.Default
-    private Boolean trackInventory = false;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sales_tax_id")
+    private Tax salesTax;
 
-    @Column(name = "current_stock", nullable = false, precision = 15, scale = 2)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "purchase_tax_id")
+    private Tax purchaseTax;
+
+    @NotBlank
+    @Column(nullable = false)
+    private String sku;
+
+    private String barcode;
+
+    @Column(name = "current_stock", nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal currentStock = BigDecimal.ZERO;
 
-    @Column(name = "reorder_level", precision = 15, scale = 2)
+    @Column(name = "reorder_level", precision = 19, scale = 4)
     private BigDecimal reorderLevel;
+
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
 
     @Column(name = "is_active", nullable = false)
     @Builder.Default
     private Boolean isActive = true;
+
+    @Column(name = "is_inventoried", nullable = false)
+    @Builder.Default
+    private Boolean trackInventory = false;
 }

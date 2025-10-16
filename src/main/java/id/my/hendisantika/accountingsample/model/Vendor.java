@@ -40,29 +40,35 @@ public class Vendor extends BaseEntity {
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
+    @Column(name = "vendor_code", nullable = false)
+    private String vendorCode;
+
     @NotBlank
-    @Column(nullable = false)
+    @Column(name = "display_name", nullable = false)
     private String name;
 
     @Column(name = "company_name")
     private String companyName;
 
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
     @Email
-    @Column(unique = true)
+    @Column(nullable = false)
     private String email;
 
     private String phone;
     private String mobile;
     private String website;
 
-    @Column(name = "tax_number")
+    @Column(name = "tax_id")
     private String taxNumber;
 
     @Column(name = "payment_terms")
     private Integer paymentTerms;
-
-    @Column(name = "credit_limit", precision = 15, scale = 2)
-    private BigDecimal creditLimit;
 
     @Column(name = "address_line1")
     private String addressLine1;
@@ -78,6 +84,21 @@ public class Vendor extends BaseEntity {
 
     private String country;
 
+    @Column(name = "bank_account_name")
+    private String bankAccountName;
+
+    @Column(name = "bank_account_number")
+    private String bankAccountNumber;
+
+    @Column(name = "bank_name")
+    private String bankName;
+
+    @Column(name = "bank_branch")
+    private String bankBranch;
+
+    @Column(name = "bank_swift_code")
+    private String bankSwiftCode;
+
     @Column(columnDefinition = "TEXT")
     private String notes;
 
@@ -85,7 +106,10 @@ public class Vendor extends BaseEntity {
     @Builder.Default
     private Boolean isActive = true;
 
-    @Column(name = "outstanding_balance", nullable = false, precision = 15, scale = 2)
+    @Column(name = "credit_limit", precision = 19, scale = 4)
+    private BigDecimal creditLimit;
+
+    @Column(name = "outstanding_balance", nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal outstandingBalance = BigDecimal.ZERO;
 }

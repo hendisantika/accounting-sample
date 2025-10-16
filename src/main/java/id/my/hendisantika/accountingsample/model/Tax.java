@@ -28,7 +28,7 @@ import java.math.BigDecimal;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "taxes")
+@Table(name = "tax_rates")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,16 +41,23 @@ public class Tax extends BaseEntity {
     private Organization organization;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name = "tax_name", nullable = false)
     private String name;
 
     @NotBlank
-    @Column(nullable = false, unique = true)
+    @Column(name = "tax_code", nullable = false)
     private String code;
 
+    @Column(name = "tax_type", nullable = false)
+    private String taxType;
+
     @NotNull
-    @Column(nullable = false, precision = 5, scale = 2)
+    @Column(name = "tax_percentage", nullable = false, precision = 5, scale = 2)
     private BigDecimal rate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tax_account_id")
+    private Account taxAccount;
 
     @Column(columnDefinition = "TEXT")
     private String description;

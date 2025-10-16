@@ -45,23 +45,23 @@ public class BillItem extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal quantity = BigDecimal.ONE;
 
-    @Column(name = "unit_price", nullable = false, precision = 15, scale = 2)
+    @Column(name = "unit_price", nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal unitPrice = BigDecimal.ZERO;
 
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(name = "discount_amount", precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal discount = BigDecimal.ZERO;
 
-    @Column(name = "tax_rate", nullable = false, precision = 5, scale = 2)
+    @Column(name = "tax_amount", precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal taxRate = BigDecimal.ZERO;
 
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(name = "line_total", nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal amount = BigDecimal.ZERO;
 

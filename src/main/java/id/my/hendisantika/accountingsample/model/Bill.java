@@ -74,29 +74,30 @@ public class Bill extends BaseEntity {
     @Builder.Default
     private List<BillItem> items = new ArrayList<>();
 
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal subtotal = BigDecimal.ZERO;
 
-    @Column(name = "tax_amount", nullable = false, precision = 15, scale = 2)
+    @Column(name = "tax_amount", nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal taxAmount = BigDecimal.ZERO;
 
-    @Column(name = "total_amount", nullable = false, precision = 15, scale = 2)
+    @Column(name = "total_amount", nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal totalAmount = BigDecimal.ZERO;
 
-    @Column(name = "paid_amount", nullable = false, precision = 15, scale = 2)
+    @Column(name = "paid_amount", nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal paidAmount = BigDecimal.ZERO;
 
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(name = "balance_amount", nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal balance = BigDecimal.ZERO;
 
     @Column(columnDefinition = "TEXT")
     private String notes;
 
+    @Column(name = "reference_number")
     private String reference;
 
     public void addItem(BillItem item) {

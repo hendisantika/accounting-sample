@@ -44,11 +44,11 @@ public class Account extends BaseEntity {
     private Organization organization;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name = "account_code", nullable = false)
     private String code;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name = "account_name", nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -57,13 +57,13 @@ public class Account extends BaseEntity {
     private AccountType accountType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "parent_account_id")
     private Account parent;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "current_balance", nullable = false, precision = 15, scale = 2)
+    @Column(name = "current_balance", nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal currentBalance = BigDecimal.ZERO;
 

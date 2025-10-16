@@ -75,7 +75,7 @@ public class Payment extends BaseEntity {
     private LocalDate paymentDate;
 
     @NotNull
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)

@@ -32,7 +32,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JournalEntryLine extends BaseEntity {
+public class JournalEntryLine {
+
+    @jakarta.persistence.Id
+    @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "journal_entry_id", nullable = false)
@@ -45,14 +49,20 @@ public class JournalEntryLine extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "debit_amount", nullable = false, precision = 15, scale = 2)
+    @Column(name = "debit_amount", nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal debitAmount = BigDecimal.ZERO;
 
-    @Column(name = "credit_amount", nullable = false, precision = 15, scale = 2)
+    @Column(name = "credit_amount", nullable = false, precision = 19, scale = 4)
     @Builder.Default
     private BigDecimal creditAmount = BigDecimal.ZERO;
 
-    @Column(name = "line_order", nullable = false)
+    @Column(name = "contact_type")
+    private String contactType;
+
+    @Column(name = "contact_id")
+    private Long contactId;
+
+    @jakarta.persistence.Transient
     private Integer lineOrder;
 }
