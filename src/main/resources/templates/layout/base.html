@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">Accounting System</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/7.0.1/css/all.min.css}">
+
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --warning-color: #ffd60a;
+            --info-color: #4cc9f0;
+            --dark-color: #2b2d42;
+            --light-color: #f8f9fa;
+            --sidebar-width: 250px;
+            --header-height: 60px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header Styles */
+        .main-header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            height: var(--header-height);
+            background: #fff;
+            border-bottom: 1px solid #e0e6ed;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Sidebar Styles */
+        .main-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--dark-color);
+            color: #fff;
+            overflow-y: auto;
+            z-index: 1001;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-logo {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .sidebar-logo h4 {
+            margin: 0;
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.25rem;
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-section-title {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            position: relative;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .menu-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .menu-link.active {
+            background: var(--primary-color);
+            color: #fff;
+            border-left: 3px solid var(--success-color);
+        }
+
+        .menu-link i {
+            width: 20px;
+            margin-right: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .submenu {
+            display: none;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .submenu.show {
+            display: block;
+        }
+
+        .submenu .menu-link {
+            padding-left: 3.5rem;
+            font-size: 0.9rem;
+        }
+
+        .menu-link .dropdown-icon {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-link.expanded .dropdown-icon {
+            transform: rotate(90deg);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 2rem;
+            min-height: calc(100vh - var(--header-height) - 60px);
+        }
+
+        /* Footer Styles */
+        .main-footer {
+            margin-left: var(--sidebar-width);
+            background: #fff;
+            border-top: 1px solid #e0e6ed;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: #8492a6;
+            font-size: 0.875rem;
+        }
+
+        /* Search Bar */
+        .search-wrapper {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid #e0e6ed;
+            border-radius: 20px;
+            background: #f5f7fa;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8492a6;
+        }
+
+        /* User Menu */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: #8492a6;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger-color);
+            color: #fff;
+            font-size: 0.65rem;
+            padding: 2px 5px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .user-menu:hover {
+            background: #f5f7fa;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--dark-color);
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: #8492a6;
+        }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            border: 1px solid #e0e6ed;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: #f5f7fa;
+            color: var(--primary-color);
+        }
+
+        .dropdown-item i {
+            margin-right: 0.5rem;
+            width: 20px;
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            background: #fff;
+            border-bottom: 1px solid #e0e6ed;
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 6px;
+            padding: 0.5rem 1.25rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .main-sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-header,
+            .main-content,
+            .main-footer {
+                margin-left: 0;
+                left: 0;
+            }
+
+            .search-wrapper {
+                width: 200px;
+            }
+        }
+
+        /* Custom scrollbar */
+        .main-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .main-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .main-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .main-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+
+    <!-- Page Specific CSS -->
+    <th:block layout:fragment="css"></th:block>
+</head>
+<body>
+<!-- Sidebar -->
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Main Content -->
+<main class="main-content">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" layout:fragment="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+        </ol>
+    </nav>
+
+    <!-- Page Content -->
+    <div layout:fragment="content">
+        <!-- Page content will be inserted here -->
+    </div>
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- jQuery -->
+<script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
+
+<!-- Bootstrap JS -->
+<script th:src="@{/webjars/bootstrap/5.3.8/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Custom JavaScript -->
+<script>
+    $(document).ready(function () {
+        // Toggle submenu
+        $('.menu-link[data-toggle="submenu"]').click(function (e) {
+            e.preventDefault();
+            const submenu = $(this).next('.submenu');
+            submenu.toggleClass('show');
+            $(this).toggleClass('expanded');
+        });
+
+        // Mobile sidebar toggle
+        $('.mobile-menu-toggle').click(function () {
+            $('.main-sidebar').toggleClass('show');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        $(document).click(function (e) {
+            if ($(window).width() <= 768) {
+                if (!$(e.target).closest('.main-sidebar, .mobile-menu-toggle').length) {
+                    $('.main-sidebar').removeClass('show');
+                }
+            }
+        });
+
+        // Active menu item
+        const currentPath = window.location.pathname;
+        $('.menu-link').each(function () {
+            const href = $(this).attr('href');
+            if (href && currentPath.startsWith(href) && href !== '/') {
+                $(this).addClass('active');
+                $(this).parents('.submenu').addClass('show');
+                $(this).parents('.submenu').prev('.menu-link').addClass('expanded');
+            }
+        });
+    });
+</script>
+
+<!-- Page Specific JavaScript -->
+<th:block layout:fragment="scripts"></th:block>
+</body>
+</html>
