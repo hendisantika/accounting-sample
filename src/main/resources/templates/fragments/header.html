@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+<!-- Header Fragment -->
+<header class="main-header" th:fragment="header">
+    <!-- Mobile Menu Toggle -->
+    <button class="btn btn-link mobile-menu-toggle d-md-none">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Search Bar -->
+    <div class="search-wrapper d-none d-md-block">
+        <i class="fas fa-search search-icon"></i>
+        <input class="form-control search-input" placeholder="Search invoices, customers, vendors..." type="text">
+    </div>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+        <!-- Notifications -->
+        <div class="dropdown">
+            <button aria-expanded="false" class="notification-btn dropdown-toggle" data-bs-toggle="dropdown"
+                    id="notificationDropdown" type="button">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" th:if="${unreadNotifications > 0}"
+                      th:text="${unreadNotifications}">5</span>
+            </button>
+            <ul aria-labelledby="notificationDropdown" class="dropdown-menu dropdown-menu-end"
+                style="width: 350px; max-height: 400px; overflow-y: auto;">
+                <li class="dropdown-header d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Notifications</span>
+                    <a class="text-primary small" href="#">Mark all as read</a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <!-- Sample Notifications -->
+                <li>
+                    <a class="dropdown-item" th:href="@{/notifications/1}">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-file-invoice text-primary me-3 mt-1"></i>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold">New Invoice Created</div>
+                                <div class="small text-muted">Invoice #INV-2024-001 for $5,000</div>
+                                <div class="small text-muted mt-1">
+                                    <i class="far fa-clock"></i> 5 minutes ago
+                                </div>
+                            </div>
+                            <span class="badge bg-primary">New</span>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <li>
+                    <a class="dropdown-item" th:href="@{/notifications/2}">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-money-bill-wave text-success me-3 mt-1"></i>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold">Payment Received</div>
+                                <div class="small text-muted">Payment of $2,500 from Acme Corp</div>
+                                <div class="small text-muted mt-1">
+                                    <i class="far fa-clock"></i> 1 hour ago
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <li>
+                    <a class="dropdown-item" th:href="@{/notifications/3}">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-exclamation-triangle text-warning me-3 mt-1"></i>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold">Invoice Overdue</div>
+                                <div class="small text-muted">Invoice #INV-2024-003 is overdue by 5 days</div>
+                                <div class="small text-muted mt-1">
+                                    <i class="far fa-clock"></i> 3 hours ago
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <li class="text-center">
+                    <a class="dropdown-item text-primary" th:href="@{/notifications}">
+                        View All Notifications
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="dropdown">
+            <button aria-expanded="false" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                    id="quickActionsDropdown" type="button">
+                <i class="fas fa-plus me-2"></i>
+                <span class="d-none d-md-inline">New</span>
+            </button>
+            <ul aria-labelledby="quickActionsDropdown" class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <h6 class="dropdown-header">Sales</h6>
+                </li>
+                <li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_SALES')">
+                    <a class="dropdown-item" th:href="@{/invoices/new}">
+                        <i class="fas fa-file-invoice"></i> New Invoice
+                    </a>
+                </li>
+                <li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_SALES')">
+                    <a class="dropdown-item" th:href="@{/customers/new}">
+                        <i class="fas fa-user-plus"></i> New Customer
+                    </a>
+                </li>
+                <li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_SALES')">
+                    <a class="dropdown-item" th:href="@{/payments/received/new}">
+                        <i class="fas fa-hand-holding-usd"></i> Record Payment
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <li>
+                    <h6 class="dropdown-header">Purchases</h6>
+                </li>
+                <li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_PURCHASE')">
+                    <a class="dropdown-item" th:href="@{/bills/new}">
+                        <i class="fas fa-file-alt"></i> New Bill
+                    </a>
+                </li>
+                <li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_PURCHASE')">
+                    <a class="dropdown-item" th:href="@{/vendors/new}">
+                        <i class="fas fa-building"></i> New Vendor
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <li>
+                    <h6 class="dropdown-header">Accounting</h6>
+                </li>
+                <li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_ACCOUNTANT')">
+                    <a class="dropdown-item" th:href="@{/journal-entries/new}">
+                        <i class="fas fa-book"></i> New Journal Entry
+                    </a>
+                </li>
+                <li sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_ACCOUNTANT')">
+                    <a class="dropdown-item" th:href="@{/accounts/new}">
+                        <i class="fas fa-calculator"></i> New Account
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- User Menu -->
+        <div class="dropdown">
+            <div aria-expanded="false" class="user-menu" data-bs-toggle="dropdown" id="userMenuDropdown">
+                <div class="user-avatar"
+                     th:text="${#authentication.principal?.username != null ? #authentication.principal.username.substring(0,1).toUpperCase() : 'U'}">
+                    U
+                </div>
+                <div class="user-info d-none d-md-block">
+                    <div class="user-name"
+                         th:text="${#authentication.principal?.username != null ? #authentication.principal.username : 'User'}">
+                        User Name
+                    </div>
+                    <div class="user-role"
+                         sec:authorize="hasRole('ADMIN')">Administrator
+                    </div>
+                    <div class="user-role"
+                         sec:authorize="hasRole('ACCOUNTANT') and !hasRole('ADMIN')">Accountant
+                    </div>
+                    <div class="user-role"
+                         sec:authorize="hasRole('SALES') and !hasRole('ADMIN') and !hasRole('ACCOUNTANT')">Sales
+                    </div>
+                    <div class="user-role"
+                         sec:authorize="hasRole('PURCHASE') and !hasRole('ADMIN') and !hasRole('ACCOUNTANT') and !hasRole('SALES')">
+                        Purchase
+                    </div>
+                    <div class="user-role"
+                         sec:authorize="hasRole('USER') and !hasRole('ADMIN') and !hasRole('ACCOUNTANT') and !hasRole('SALES') and !hasRole('PURCHASE')">
+                        User
+                    </div>
+                </div>
+                <i class="fas fa-chevron-down ms-2 d-none d-md-block"></i>
+            </div>
+            <ul aria-labelledby="userMenuDropdown" class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item" th:href="@{/profile}">
+                        <i class="fas fa-user"></i> My Profile
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" th:href="@{/organization}">
+                        <i class="fas fa-building"></i> Organization Settings
+                    </a>
+                </li>
+                <li sec:authorize="hasRole('ADMIN')">
+                    <a class="dropdown-item" th:href="@{/settings}">
+                        <i class="fas fa-cog"></i> System Settings
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <a class="dropdown-item" th:href="@{/help}">
+                        <i class="fas fa-question-circle"></i> Help & Support
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" th:href="@{/docs}">
+                        <i class="fas fa-book-open"></i> Documentation
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <form id="logoutForm" method="post" th:action="@{/logout}">
+                        <a class="dropdown-item" href="#"
+                           onclick="document.getElementById('logoutForm').submit(); return false;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+</body>
+</html>
