@@ -131,18 +131,18 @@
             <p class="text-center subtitle">Sign in to your account</p>
 
             <!-- Error Message Display -->
-            <div class="alert alert-danger" role="alert" th:if="${error}">
+            <div class="alert alert-danger" role="alert" th:if="${param.error}">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                <span th:text="${error}">Invalid email or password</span>
+                <span>Invalid email or password</span>
             </div>
 
-            <div class="alert alert-success" role="alert" th:if="${message}">
+            <div class="alert alert-success" role="alert" th:if="${param.logout}">
                 <i class="bi bi-check-circle-fill me-2"></i>
-                <span th:text="${message}">Success message</span>
+                <span>You have been successfully logged out</span>
             </div>
 
             <!-- Login Form -->
-            <form method="post" th:action="@{/login}" th:object="${loginForm}">
+            <form method="post" th:action="@{/perform-login}">
                 <!-- Email Field -->
                 <div class="mb-3">
                     <label class="form-label" for="email">
@@ -151,13 +151,10 @@
                     <input autofocus
                            class="form-control"
                            id="email"
+                           name="email"
                            placeholder="Enter your email"
                            required
-                           th:field="*{email}"
                            type="email">
-                    <div class="invalid-feedback" th:errors="*{email}" th:if="${#fields.hasErrors('email')}">
-                        Email error
-                    </div>
                 </div>
 
                 <!-- Password Field -->
@@ -167,22 +164,19 @@
                     </label>
                     <input class="form-control"
                            id="password"
+                           name="password"
                            placeholder="Enter your password"
                            required
-                           th:field="*{password}"
                            type="password">
-                    <div class="invalid-feedback" th:errors="*{password}" th:if="${#fields.hasErrors('password')}">
-                        Password error
-                    </div>
                 </div>
 
                 <!-- Remember Me Checkbox -->
                 <div class="mb-3 form-check">
                     <input class="form-check-input"
-                           id="rememberMe"
-                           th:field="*{rememberMe}"
+                           id="remember-me"
+                           name="remember-me"
                            type="checkbox">
-                    <label class="form-check-label" for="rememberMe">
+                    <label class="form-check-label" for="remember-me">
                         Remember me
                     </label>
                 </div>
