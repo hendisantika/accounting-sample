@@ -1,9 +1,76 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout/base}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>My Profile</title>
+
+    <th:block layout:fragment="css">
+        <style>
+            .profile-header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 2rem;
+                border-radius: 8px;
+                margin-bottom: 2rem;
+            }
+
+            .profile-avatar {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                background: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 3rem;
+                font-weight: bold;
+                color: #667eea;
+                border: 4px solid rgba(255, 255, 255, 0.3);
+            }
+
+            .profile-info {
+                flex: 1;
+            }
+
+            .nav-pills .nav-link {
+                border-radius: 8px;
+                color: #6c757d;
+                transition: all 0.3s;
+            }
+
+            .nav-pills .nav-link.active {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+
+            .nav-pills .nav-link:hover:not(.active) {
+                background: #f8f9fa;
+            }
+
+            .form-section {
+                background: white;
+                padding: 2rem;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            }
+
+            .activity-item {
+                padding: 1rem;
+                border-left: 3px solid #667eea;
+                margin-bottom: 1rem;
+                background: #f8f9fa;
+                border-radius: 4px;
+            }
+
+            .badge-role {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.875rem;
+            }
+        </style>
+    </th:block>
 </head>
 <body>
 <nav aria-label="breadcrumb" layout:fragment="breadcrumb">
@@ -15,12 +82,462 @@
 
 <div layout:fragment="content">
     <div class="container-fluid">
-        <h1 class="h3 mb-4">My Profile</h1>
-        <div class="alert alert-info">
-            <i class="fas fa-user me-2"></i>
-            User profile page is under development. Please use the API endpoints to manage your profile.
+        <!-- Profile Header -->
+        <div class="profile-header shadow">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="profile-avatar">
+                        <span th:text="${#authentication.principal?.username != null ? #authentication.principal.username.substring(0,1).toUpperCase() : 'U'}">U</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <h2 class="mb-1"
+                        th:text="${#authentication.principal?.username != null ? #authentication.principal.username : 'User Name'}">
+                        User Name</h2>
+                    <p class="mb-2 opacity-75">user@example.com</p>
+                    <span class="badge badge-role">
+                        <i class="fas fa-user-shield me-1"></i>
+                        <span sec:authorize="hasRole('ADMIN')">Administrator</span>
+                        <span sec:authorize="hasRole('ACCOUNTANT') and !hasRole('ADMIN')">Accountant</span>
+                        <span sec:authorize="hasRole('USER') and !hasRole('ADMIN') and !hasRole('ACCOUNTANT')">User</span>
+                    </span>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-light" data-bs-target="#uploadPhotoModal" data-bs-toggle="modal">
+                        <i class="fas fa-camera me-2"></i>Change Photo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-md-3 mb-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <nav class="nav flex-column nav-pills">
+                            <a class="nav-link active" data-bs-target="#general" data-bs-toggle="pill" href="#general">
+                                <i class="fas fa-user me-2"></i>General Information
+                            </a>
+                            <a class="nav-link" data-bs-target="#security" data-bs-toggle="pill" href="#security">
+                                <i class="fas fa-lock me-2"></i>Security
+                            </a>
+                            <a class="nav-link" data-bs-target="#preferences" data-bs-toggle="pill" href="#preferences">
+                                <i class="fas fa-cog me-2"></i>Preferences
+                            </a>
+                            <a class="nav-link" data-bs-target="#activity" data-bs-toggle="pill" href="#activity">
+                                <i class="fas fa-history me-2"></i>Activity Log
+                            </a>
+                            <a class="nav-link" data-bs-target="#sessions" data-bs-toggle="pill" href="#sessions">
+                                <i class="fas fa-desktop me-2"></i>Active Sessions
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-md-9">
+                <div class="tab-content">
+                    <!-- General Information Tab -->
+                    <div class="tab-pane fade show active" id="general">
+                        <div class="form-section">
+                            <h5 class="mb-4">
+                                <i class="fas fa-user text-primary me-2"></i>Personal Information
+                            </h5>
+                            <form id="profileForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="firstName">First Name</label>
+                                        <input class="form-control" id="firstName" placeholder="John" type="text"
+                                               value="John">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="lastName">Last Name</label>
+                                        <input class="form-control" id="lastName" placeholder="Doe" type="text"
+                                               value="Doe">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="email">Email Address</label>
+                                        <input class="form-control" id="email" placeholder="john@example.com"
+                                               type="email" value="john@example.com">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="phone">Phone Number</label>
+                                        <input class="form-control" id="phone" placeholder="+1 234 567 8900" type="tel"
+                                               value="+1 234 567 8900">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="jobTitle">Job Title</label>
+                                        <input class="form-control" id="jobTitle" placeholder="Accountant" type="text"
+                                               value="Senior Accountant">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="department">Department</label>
+                                        <select class="form-select" id="department">
+                                            <option>Accounting</option>
+                                            <option>Finance</option>
+                                            <option>Sales</option>
+                                            <option>Management</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label" for="bio">Bio</label>
+                                        <textarea class="form-control" id="bio" placeholder="Tell us about yourself..."
+                                                  rows="3">Experienced accountant with 5+ years in financial management.</textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <hr>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <button class="btn btn-outline-secondary" type="reset">Reset</button>
+                                            <button class="btn btn-primary" type="submit">
+                                                <i class="fas fa-save me-2"></i>Save Changes
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Security Tab -->
+                    <div class="tab-pane fade" id="security">
+                        <div class="form-section mb-4">
+                            <h5 class="mb-4">
+                                <i class="fas fa-key text-warning me-2"></i>Change Password
+                            </h5>
+                            <form id="passwordForm">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label" for="currentPassword">Current Password</label>
+                                        <input class="form-control" id="currentPassword"
+                                               placeholder="Enter current password" required type="password">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="newPassword">New Password</label>
+                                        <input class="form-control" id="newPassword" placeholder="Enter new password"
+                                               required type="password">
+                                        <div class="form-text">Minimum 8 characters</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="confirmPassword">Confirm New Password</label>
+                                        <input class="form-control" id="confirmPassword"
+                                               placeholder="Confirm new password" required type="password">
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <strong>Password Requirements:</strong>
+                                            <ul class="mb-0 mt-2">
+                                                <li>At least 8 characters long</li>
+                                                <li>Contains uppercase and lowercase letters</li>
+                                                <li>Contains at least one number</li>
+                                                <li>Contains at least one special character</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-warning" type="submit">
+                                            <i class="fas fa-lock me-2"></i>Update Password
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="form-section">
+                            <h5 class="mb-4">
+                                <i class="fas fa-shield-alt text-success me-2"></i>Two-Factor Authentication
+                            </h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6>Enable Two-Factor Authentication</h6>
+                                    <p class="text-muted mb-0">Add an extra layer of security to your account</p>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" id="twoFactorSwitch" role="switch"
+                                           style="width: 3rem; height: 1.5rem;" type="checkbox">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preferences Tab -->
+                    <div class="tab-pane fade" id="preferences">
+                        <div class="form-section">
+                            <h5 class="mb-4">
+                                <i class="fas fa-palette text-info me-2"></i>User Preferences
+                            </h5>
+                            <form id="preferencesForm">
+                                <div class="row g-4">
+                                    <div class="col-12">
+                                        <h6>Appearance</h6>
+                                        <hr>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="language">Language</label>
+                                        <select class="form-select" id="language">
+                                            <option selected>English (US)</option>
+                                            <option>Español</option>
+                                            <option>Français</option>
+                                            <option>Deutsch</option>
+                                            <option>Indonesian</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="timezone">Timezone</label>
+                                        <select class="form-select" id="timezone">
+                                            <option selected>UTC-05:00 (Eastern Time)</option>
+                                            <option>UTC-08:00 (Pacific Time)</option>
+                                            <option>UTC+00:00 (GMT)</option>
+                                            <option>UTC+07:00 (Jakarta)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="dateFormat">Date Format</label>
+                                        <select class="form-select" id="dateFormat">
+                                            <option selected>MM/DD/YYYY</option>
+                                            <option>DD/MM/YYYY</option>
+                                            <option>YYYY-MM-DD</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="currency">Currency</label>
+                                        <select class="form-select" id="currency">
+                                            <option selected>USD ($)</option>
+                                            <option>EUR (€)</option>
+                                            <option>GBP (£)</option>
+                                            <option>IDR (Rp)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <h6 class="mt-3">Notifications</h6>
+                                        <hr>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-check form-switch mb-3">
+                                            <input checked class="form-check-input" id="emailNotifications"
+                                                   type="checkbox">
+                                            <label class="form-check-label" for="emailNotifications">
+                                                Email Notifications
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input checked class="form-check-input" id="invoiceAlerts" type="checkbox">
+                                            <label class="form-check-label" for="invoiceAlerts">
+                                                Invoice Status Alerts
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" id="paymentAlerts" type="checkbox">
+                                            <label class="form-check-label" for="paymentAlerts">
+                                                Payment Notifications
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input checked class="form-check-input" id="reportAlerts" type="checkbox">
+                                            <label class="form-check-label" for="reportAlerts">
+                                                Weekly Report Summary
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <hr>
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="fas fa-save me-2"></i>Save Preferences
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Activity Log Tab -->
+                    <div class="tab-pane fade" id="activity">
+                        <div class="form-section">
+                            <h5 class="mb-4">
+                                <i class="fas fa-history text-primary me-2"></i>Recent Activity
+                            </h5>
+                            <div class="activity-item">
+                                <div class="d-flex justify-content-between">
+                                    <strong>Invoice Created</strong>
+                                    <span class="text-muted">2 hours ago</span>
+                                </div>
+                                <p class="mb-0 text-muted">Created invoice #INV-2025-001 for $5,000</p>
+                            </div>
+                            <div class="activity-item">
+                                <div class="d-flex justify-content-between">
+                                    <strong>Profile Updated</strong>
+                                    <span class="text-muted">1 day ago</span>
+                                </div>
+                                <p class="mb-0 text-muted">Updated contact information</p>
+                            </div>
+                            <div class="activity-item">
+                                <div class="d-flex justify-content-between">
+                                    <strong>Customer Added</strong>
+                                    <span class="text-muted">2 days ago</span>
+                                </div>
+                                <p class="mb-0 text-muted">Added new customer: Acme Corporation</p>
+                            </div>
+                            <div class="activity-item">
+                                <div class="d-flex justify-content-between">
+                                    <strong>Report Generated</strong>
+                                    <span class="text-muted">3 days ago</span>
+                                </div>
+                                <p class="mb-0 text-muted">Downloaded Profit & Loss report for Q1 2025</p>
+                            </div>
+                            <div class="activity-item">
+                                <div class="d-flex justify-content-between">
+                                    <strong>Login</strong>
+                                    <span class="text-muted">5 days ago</span>
+                                </div>
+                                <p class="mb-0 text-muted">Logged in from 192.168.1.1</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Sessions Tab -->
+                    <div class="tab-pane fade" id="sessions">
+                        <div class="form-section">
+                            <h5 class="mb-4">
+                                <i class="fas fa-desktop text-success me-2"></i>Active Sessions
+                            </h5>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                These are the devices currently logged into your account.
+                            </div>
+                            <div class="list-group">
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">
+                                                <i class="fas fa-laptop text-primary me-2"></i>Current Session
+                                            </h6>
+                                            <p class="mb-1">Chrome on MacOS</p>
+                                            <small class="text-muted">IP: 192.168.1.100 • Last active: Just now</small>
+                                        </div>
+                                        <span class="badge bg-success">Active</span>
+                                    </div>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">
+                                                <i class="fas fa-mobile-alt text-info me-2"></i>Mobile Device
+                                            </h6>
+                                            <p class="mb-1">Safari on iPhone</p>
+                                            <small class="text-muted">IP: 192.168.1.101 • Last active: 2 hours
+                                                ago</small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-danger">Revoke</button>
+                                    </div>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">
+                                                <i class="fas fa-tablet-alt text-secondary me-2"></i>Tablet
+                                            </h6>
+                                            <p class="mb-1">Chrome on iPad</p>
+                                            <small class="text-muted">IP: 192.168.1.102 • Last active: 1 day ago</small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-danger">Revoke</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <button class="btn btn-danger">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Sign Out All Other Sessions
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Photo Modal -->
+    <div aria-hidden="true" aria-labelledby="uploadPhotoModalLabel" class="modal fade" id="uploadPhotoModal"
+         tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadPhotoModalLabel">Change Profile Photo</h5>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <div class="profile-avatar mx-auto mb-3" style="width: 150px; height: 150px; font-size: 4rem;">
+                            <span>U</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="photoUpload">Choose a photo</label>
+                        <input accept="image/*" class="form-control" id="photoUpload" type="file">
+                        <div class="form-text">Recommended: Square image, at least 400x400px</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                    <button class="btn btn-primary" type="button">Upload Photo</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        $(document).ready(function () {
+            // Profile form submission
+            $('#profileForm').on('submit', function (e) {
+                e.preventDefault();
+                alert('Profile updated successfully!');
+            });
+
+            // Password form submission
+            $('#passwordForm').on('submit', function (e) {
+                e.preventDefault();
+                const newPassword = $('#newPassword').val();
+                const confirmPassword = $('#confirmPassword').val();
+
+                if (newPassword !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+
+                if (newPassword.length < 8) {
+                    alert('Password must be at least 8 characters long!');
+                    return;
+                }
+
+                alert('Password updated successfully!');
+                $(this)[0].reset();
+            });
+
+            // Preferences form submission
+            $('#preferencesForm').on('submit', function (e) {
+                e.preventDefault();
+                alert('Preferences saved successfully!');
+            });
+
+            // Two-factor authentication toggle
+            $('#twoFactorSwitch').on('change', function () {
+                if ($(this).is(':checked')) {
+                    alert('Two-Factor Authentication enabled!');
+                } else {
+                    if (confirm('Are you sure you want to disable Two-Factor Authentication?')) {
+                        alert('Two-Factor Authentication disabled!');
+                    } else {
+                        $(this).prop('checked', true);
+                    }
+                }
+            });
+        });
+    </script>
+</th:block>
 </body>
 </html>
