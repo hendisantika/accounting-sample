@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment Form</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h3 mb-0">Record Payment</h1>
+                <p class="text-muted">Record a payment received or made</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label" for="paymentType">Payment Type *</label>
+                                <select class="form-select" id="paymentType" required>
+                                    <option value="">Select type...</option>
+                                    <option value="RECEIVED">Payment Received</option>
+                                    <option value="MADE">Payment Made</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="paymentDate">Payment Date *</label>
+                                <input class="form-control" id="paymentDate" required type="date">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="amount">Amount *</label>
+                                <input class="form-control" id="amount" min="0" required step="0.01" type="number">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="method">Payment Method *</label>
+                                <select class="form-select" id="method" required>
+                                    <option value="">Select method...</option>
+                                    <option value="CASH">Cash</option>
+                                    <option value="CHECK">Check</option>
+                                    <option value="BANK_TRANSFER">Bank Transfer</option>
+                                    <option value="CREDIT_CARD">Credit Card</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="reference">Reference Number</label>
+                                <input class="form-control" id="reference" type="text">
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary" type="submit">Save Payment</button>
+                                <a class="btn btn-secondary" th:href="@{/payments}">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
