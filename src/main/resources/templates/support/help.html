@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Help Center</title>
+</head>
+<body>
+<nav aria-label="breadcrumb" layout:fragment="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+        <li class="breadcrumb-item active">Help Center</li>
+    </ol>
+</nav>
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h3 mb-2">Help Center</h1>
+                <p class="text-muted">Find answers to common questions and get support</p>
+            </div>
+        </div>
+
+        <!-- Search Box -->
+        <div class="row mb-4">
+            <div class="col-md-8 offset-md-2">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input class="form-control" placeholder="Search for help articles..." type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-rocket fa-3x text-primary mb-3"></i>
+                        <h5>Getting Started</h5>
+                        <p class="text-muted">Learn the basics of the accounting system</p>
+                        <a class="btn btn-outline-primary" href="#">View Guide</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-file-invoice fa-3x text-success mb-3"></i>
+                        <h5>Invoicing</h5>
+                        <p class="text-muted">Create and manage invoices</p>
+                        <a class="btn btn-outline-success" href="#">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-line fa-3x text-info mb-3"></i>
+                        <h5>Reports</h5>
+                        <p class="text-muted">Understand financial reports</p>
+                        <a class="btn btn-outline-info" href="#">Explore</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="fas fa-cog fa-3x text-warning mb-3"></i>
+                        <h5>Settings</h5>
+                        <p class="text-muted">Configure your account</p>
+                        <a class="btn btn-outline-warning" href="#">Setup</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h5 class="mb-0">Frequently Asked Questions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="faqAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button aria-controls="faq1" aria-expanded="true" class="accordion-button"
+                                            data-bs-target="#faq1" data-bs-toggle="collapse" type="button">
+                                        How do I create my first invoice?
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse show" data-bs-parent="#faqAccordion" id="faq1">
+                                    <div class="accordion-body">
+                                        To create your first invoice, navigate to <strong>Invoices → New
+                                        Invoice</strong>
+                                        from the sidebar menu. Fill in the customer details, add line items, and click
+                                        Save.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button aria-controls="faq2" aria-expanded="false"
+                                            class="accordion-button collapsed"
+                                            data-bs-target="#faq2" data-bs-toggle="collapse" type="button">
+                                        How do I track payments?
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse" data-bs-parent="#faqAccordion" id="faq2">
+                                    <div class="accordion-body">
+                                        You can track payments in the <strong>Payments Received</strong> section. All
+                                        payments linked to invoices will automatically update the invoice status.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button aria-controls="faq3" aria-expanded="false"
+                                            class="accordion-button collapsed"
+                                            data-bs-target="#faq3" data-bs-toggle="collapse" type="button">
+                                        Can I customize invoice templates?
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse" data-bs-parent="#faqAccordion" id="faq3">
+                                    <div class="accordion-body">
+                                        Yes! Go to <strong>Settings → Templates</strong> to customize your invoice
+                                        templates with your logo and branding.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button aria-controls="faq4" aria-expanded="false"
+                                            class="accordion-button collapsed"
+                                            data-bs-target="#faq4" data-bs-toggle="collapse" type="button">
+                                        How do I generate financial reports?
+                                    </button>
+                                </h2>
+                                <div class="accordion-collapse collapse" data-bs-parent="#faqAccordion" id="faq4">
+                                    <div class="accordion-body">
+                                        Navigate to <strong>Reports</strong> in the sidebar to access Profit & Loss,
+                                        Balance Sheet, and other financial reports. Select your date range and view the
+                                        report.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Support -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow bg-light">
+                    <div class="card-body text-center">
+                        <h5>Still need help?</h5>
+                        <p class="text-muted">Our support team is here to assist you</p>
+                        <a class="btn btn-primary" href="mailto:support@accountingsample.com">
+                            <i class="fas fa-envelope me-2"></i>Contact Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
