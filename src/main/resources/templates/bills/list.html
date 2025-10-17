@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bills</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Bills</h1>
+                        <p class="text-muted">Manage vendor bills and payables</p>
+                    </div>
+                    <a class="btn btn-primary" th:href="@{/bills/new}">
+                        <i class="bi bi-file-earmark-plus me-2"></i>New Bill
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bills List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            Bill List
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Bill #</th>
+                                    <th>Vendor</th>
+                                    <th>Date</th>
+                                    <th>Due Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center text-muted py-4" colspan="7">
+                                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                        No bills found. Click "New Bill" to add your first bill.
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
