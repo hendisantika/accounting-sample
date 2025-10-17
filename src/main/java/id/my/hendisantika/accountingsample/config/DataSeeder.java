@@ -87,7 +87,7 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) {
         // Check if data already exists
-        if (userRepository.count() > 0) {
+        if (organizationRepository.count() > 0 || userRepository.count() > 0) {
             log.info("Data already seeded. Skipping...");
             return;
         }
@@ -115,6 +115,14 @@ public class DataSeeder implements CommandLineRunner {
 
     private void seedOrganization() {
         log.info("Seeding organization...");
+
+        // Check if organization already exists
+        organization = organizationRepository.findAll().stream().findFirst().orElse(null);
+        if (organization != null) {
+            log.info("Organization already exists: {}", organization.getName());
+            return;
+        }
+
         organization = Organization.builder()
                 .name("Anime Accounting Corp")
                 .legalName("Anime Accounting Corporation Ltd.")

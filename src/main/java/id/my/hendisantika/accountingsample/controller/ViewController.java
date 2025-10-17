@@ -36,7 +36,7 @@ public class ViewController {
 
     @GetMapping("/")
     public String home() {
-        return "redirect:/dashboard";
+        return "redirect:/swagger-ui";
     }
 
     @GetMapping("/dashboard")

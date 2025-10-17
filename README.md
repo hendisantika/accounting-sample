@@ -11,12 +11,12 @@ Thymeleaf-based UI and complete double-entry bookkeeping system with multi-tenan
 ## 🎯 What's Special About This Project
 
 - ✅ **100% Feature Complete** - All core accounting modules implemented
-- ✅ **100 Demo Users** - Pre-loaded with 100 anime characters from One Piece, Demon Slayer, Naruto & Jujutsu Kaisen
 - ✅ **Multi-Tenant SaaS** - Complete organization-based data isolation
 - ✅ **Professional UI** - Zoho Books-inspired Thymeleaf templates with Bootstrap 5
 - ✅ **Double-Entry Bookkeeping** - Fully compliant accounting system
-- ✅ **REST API + Swagger** - Complete API documentation with 87+ endpoints
+- ✅ **REST API + Swagger** - Complete API documentation with 87+ endpoints at root URL
 - ✅ **Production Ready** - JWT authentication, caching, validation, audit logging
+- ✅ **Easy Setup** - Register your account via Swagger UI in seconds
 
 ---
 
@@ -293,18 +293,16 @@ Thymeleaf-based UI and complete double-entry bookkeeping system with multi-tenan
 - [x] JWT authentication in Swagger
 - [x] Grouped by modules
 
-### ✅ Demo Data (100% Complete)
+### ✅ Demo Data (Database Schema Ready)
 
-- [x] 100 anime character users (4 series, 25 each)
-- [x] 50 anime-themed customers
-- [x] 50 anime-themed vendors
-- [x] 35 chart of accounts
-- [x] 20 tax rates
-- [x] 50 anime merchandise products
-- [x] 20 sample invoices with line items
-- [x] 20 sample bills with line items
-- [x] 30 sample payments
-- [x] Realistic transaction data
+- [x] Database schema with 22 tables
+- [x] Flyway migrations (8 migration files)
+- [x] Chart of accounts structure (35 accounts)
+- [x] Tax rates structure (20 tax types)
+- [x] Sample data seeder (can be enabled)
+- [x] Multi-tenant organization support
+- [x] Complete accounting workflow
+- [x] Ready for production data
 
 ### 📋 Optional Modules (Not Yet Implemented)
 
@@ -354,11 +352,19 @@ Thymeleaf-based UI and complete double-entry bookkeeping system with multi-tenan
    ```
 
 5. **Access the application:**
-    - **Web UI:** http://localhost:8080
-    - **Login Page:** http://localhost:8080/login
-    - **Dashboard:** http://localhost:8080/dashboard
-    - **Swagger UI:** http://localhost:8080/swagger-ui.html
-    - **API Docs:** http://localhost:8080/api-docs
+    - **API Documentation (Root):** http://localhost:8080/api (redirects to Swagger UI)
+    - **Swagger UI:** http://localhost:8080/api/swagger-ui
+    - **API Docs:** http://localhost:8080/api/api-docs
+    - **Login Page:** http://localhost:8080/api/login
+    - **Dashboard:** http://localhost:8080/api/dashboard
+
+6. **Register your first account:**
+    - Open Swagger UI: http://localhost:8080/api/swagger-ui
+    - Find **POST /api/auth/register**
+    - Click "Try it out" and register with your details
+    - Then use **POST /api/auth/login** to get your access token
+    - Click "Authorize" button and enter: `Bearer YOUR_TOKEN`
+    - Now you can use all endpoints!
 
 ### Default Configuration
 
@@ -381,64 +387,114 @@ Host: localhost:6379
 
 ```
 Port: 8080
-Context Path: /
-API Path: /api/*
+Context Path: /api
+Root URL: http://localhost:8080/api (redirects to Swagger UI)
+Swagger UI: http://localhost:8080/api/swagger-ui
 JWT Expiration: 24 hours
 ```
 
 ---
 
-## 🎮 Demo Data - 100 Anime Characters
+## 🎮 Getting Started with Authentication
 
-The application comes pre-loaded with **100 demo users** from 4 popular anime series. All users have the same password:
-**`password123`**
+### First-Time Setup: Register Your Account
 
-### Quick Access Credentials
+On first launch, you'll need to register a new account. The application will create an organization for you
+automatically.
 
-**Default Password for ALL users:** `password123`
+### How to Register
 
-### 🏴‍☠️ ONE PIECE (25 Characters)
+**Option 1: Using Swagger UI (Recommended)**
 
-**Straw Hat Pirates:**
-| Name | Email | Role |
-|------|-------|------|
-| Luffy | luffy.onepiece@animeaccounting.com | OWNER |
-| Zoro | zoro.onepiece@animeaccounting.com | ADMIN |
-| Nami | nami.onepiece@animeaccounting.com | ACCOUNTANT |
-| Sanji | sanji.onepiece@animeaccounting.com | USER |
+1. Navigate to http://localhost:8080/api/swagger-ui
+2. Find **POST /api/auth/register** endpoint
+3. Click "Try it out"
+4. Use this example payload:
 
-### ⚔️ DEMON SLAYER (25 Characters)
+```json
+{
+  "organizationName": "My Company",
+  "firstName": "Admin",
+  "lastName": "User",
+  "email": "admin@example.com",
+  "password": "password123",
+  "phone": "+1234567890",
+  "country": "USA"
+}
+```
 
-**Main Characters:**
-| Name | Email | Role |
-|------|-------|------|
-| Tanjiro | tanjiro.demonslayer@animeaccounting.com | OWNER |
-| Nezuko | nezuko.demonslayer@animeaccounting.com | USER |
-| Zenitsu | zenitsu.demonslayer@animeaccounting.com | USER |
-| Shinobu | shinobu.demonslayer@animeaccounting.com | ADMIN |
+5. Click "Execute"
+6. You'll receive a success response
 
-### 🍥 NARUTO (25 Characters)
+**Option 2: Using cURL**
 
-**Team 7 & Legends:**
-| Name | Email | Role |
-|------|-------|------|
-| Naruto | naruto.naruto@animeaccounting.com | OWNER |
-| Sasuke | sasuke.naruto@animeaccounting.com | ADMIN |
-| Sakura | sakura.naruto@animeaccounting.com | ACCOUNTANT |
-| Kakashi | kakashi.naruto@animeaccounting.com | ADMIN |
+```bash
+curl -X POST http://localhost:8080/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "organizationName": "My Company",
+    "firstName": "Admin",
+    "lastName": "User",
+    "email": "admin@example.com",
+    "password": "password123",
+    "phone": "+1234567890",
+    "country": "USA"
+  }'
+```
 
-### 💀 JUJUTSU KAISEN (25 Characters)
+### How to Login
 
-**Tokyo Jujutsu High:**
-| Name | Email | Role |
-|------|-------|------|
-| Yuji | yuji.jujutsukaisen@animeaccounting.com | OWNER |
-| Megumi | megumi.jujutsukaisen@animeaccounting.com | ADMIN |
-| Nobara | nobara.jujutsukaisen@animeaccounting.com | ACCOUNTANT |
-| Gojo | gojo.jujutsukaisen@animeaccounting.com | ADMIN |
+**Using Swagger UI:**
 
-**📘 See [ANIME_CHARACTERS_GUIDE.md](ANIME_CHARACTERS_GUIDE.md) for the complete list of all 100 characters with roles
-and test scenarios.**
+1. Navigate to **POST /api/auth/login**
+2. Click "Try it out"
+3. Enter your credentials:
+
+```json
+{
+  "email": "admin@example.com",
+  "password": "password123"
+}
+```
+
+4. Click "Execute"
+5. Copy the `accessToken` from the response
+6. Click the "Authorize" button at the top of Swagger UI
+7. Enter: `Bearer YOUR_ACCESS_TOKEN`
+8. Click "Authorize"
+9. Now you can use all authenticated endpoints!
+
+**Using cURL:**
+
+```bash
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@example.com",
+    "password": "password123"
+  }'
+```
+
+### Default Login Credentials (After Registration)
+
+After you register your first account, use:
+
+- **Email:** `admin@example.com` (or whatever email you registered)
+- **Password:** `password123` (or your chosen password)
+
+### Quick Test Accounts
+
+You can register multiple test accounts for different roles:
+
+| Email               | Role       | Purpose               |
+|---------------------|------------|-----------------------|
+| owner@test.com      | OWNER      | Full system access    |
+| admin@test.com      | ADMIN      | Administrative access |
+| accountant@test.com | ACCOUNTANT | Accounting operations |
+| user@test.com       | USER       | Basic operations      |
+| viewer@test.com     | VIEWER     | Read-only access      |
+
+**Note:** The first user you create will automatically have OWNER role
 
 ### Role Permissions
 
@@ -458,7 +514,9 @@ and test scenarios.**
 
 Once the application is running, access the interactive API documentation:
 
-**Swagger UI:** http://localhost:8080/swagger-ui.html
+- **Root URL (redirects to Swagger UI):** http://localhost:8080/api
+- **Swagger UI:** http://localhost:8080/api/swagger-ui
+- **OpenAPI JSON:** http://localhost:8080/api/api-docs
 
 ### Authentication Flow
 
@@ -625,13 +683,16 @@ Authorization: Bearer {accessToken}
 ### Accessing the Web UI
 
 1. Start the application
-2. Navigate to http://localhost:8080
-3. You'll be redirected to http://localhost:8080/login
+2. Navigate to http://localhost:8080/api
+3. You'll be redirected to http://localhost:8080/api/swagger-ui (API Documentation)
+4. For the web UI, navigate to http://localhost:8080/api/login
 
-### Login with Demo Account
+### Login with Your Account
 
-**Email:** `luffy.onepiece@animeaccounting.com`
-**Password:** `password123`
+After registration, use your credentials:
+
+- **Email:** Your registered email (e.g., `admin@example.com`)
+- **Password:** Your chosen password
 
 ### UI Structure
 
@@ -1149,39 +1210,44 @@ jwt.expiration=86400000  # 24 hours in milliseconds
 
 ## 🧪 Testing
 
-### Manual Testing with Demo Data
+### Manual Testing Guide
 
-**Test Scenario 1: Owner Access**
+**Test Scenario 1: First-Time Registration**
 
-1. Login as `luffy.onepiece@animeaccounting.com` / `password123`
-2. Navigate to Settings → Users
-3. Create a new user (should succeed)
-4. Navigate to Customers
+1. Navigate to http://localhost:8080/api/swagger-ui
+2. Use POST `/api/auth/register` to create your first account
+3. Verify you receive a success response
+4. Use POST `/api/auth/login` with your credentials
+5. Copy the access token
+6. Click "Authorize" and enter `Bearer YOUR_TOKEN`
+7. Test any protected endpoint (should succeed)
+
+**Test Scenario 2: Owner Access**
+
+1. Login with your OWNER account
+2. Navigate to Users endpoints
+3. Create a new user via POST `/api/users`
+4. Navigate to Customers endpoints
 5. Create/Edit/Delete customers (should all succeed)
 
-**Test Scenario 2: Accountant Access**
+**Test Scenario 3: Multi-Tenancy**
 
-1. Login as `nami.onepiece@animeaccounting.com` / `password123`
-2. Navigate to Invoices
-3. Create a new invoice (should succeed)
-4. Navigate to Settings → Users
-5. Try to create a user (should fail - access denied)
+1. Register a second organization via `/api/auth/register`
+2. Login with the new account (get new token)
+3. Try to access customers (should return empty - different organization)
+4. Create a customer for this organization
+5. Login back with first organization account
+6. Verify you cannot see the second organization's customer
+7. Each organization's data is completely isolated
 
-**Test Scenario 3: Viewer Access**
+**Test Scenario 4: API Workflow**
 
-1. Login as `chopper.onepiece@animeaccounting.com` / `password123`
-2. Navigate to Dashboard (should see data)
-3. Navigate to Invoices (should see list)
-4. Try to create a new invoice (button should be hidden or disabled)
-
-**Test Scenario 4: Multi-Tenancy**
-
-1. Register a new organization via `/api/auth/register`
-2. Login with the new account
-3. Verify you cannot see any data from the anime organization
-4. Create a customer
-5. Login back as `luffy.onepiece@animeaccounting.com`
-6. Verify you cannot see the customer you just created
+1. Create a customer via POST `/api/customers`
+2. Create items via POST `/api/items`
+3. Create an invoice via POST `/api/invoices` with line items
+4. Record a payment via POST `/api/payments`
+5. Check the invoice status updated
+6. Verify customer balance updated
 
 ### API Testing with cURL
 
@@ -1233,7 +1299,7 @@ curl -X POST http://localhost:8080/api/payments \
 
 ### Testing with Swagger UI
 
-1. Navigate to http://localhost:8080/swagger-ui.html
+1. Navigate to http://localhost:8080/api/swagger-ui (or simply http://localhost:8080/api which redirects)
 2. Click "Authorize" button
 3. Enter: `Bearer YOUR_ACCESS_TOKEN`
 4. Click "Authorize"
@@ -1389,17 +1455,18 @@ For issues, questions, or contributions:
 
 ## 📊 Project Statistics
 
-- **Total Java Files:** 100+
+- **Total Java Files:** 105+
 - **Total Lines of Code:** 15,000+
-- **Database Tables:** 23
+- **Database Tables:** 22
+- **Flyway Migrations:** 8
 - **API Endpoints:** 87+
-- **Demo Users:** 100
-- **Pre-loaded Customers:** 50
-- **Pre-loaded Vendors:** 50
-- **Pre-loaded Products:** 50
-- **Sample Transactions:** 70 (invoices + bills + payments)
+- **REST Controllers:** 13
+- **JPA Entities:** 21
+- **Repositories:** 14
+- **Service Classes:** 13
 - **Thymeleaf Templates:** 13+
 - **Build Status:** ✅ SUCCESS
+- **Startup Time:** ~4 seconds
 
 ---
 

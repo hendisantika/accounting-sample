@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Accounting Compose",
+      "Group": "Servers",
+      "Port": 5433,
+      "Username": "yu71",
+      "Password": "53cret",
+      "Host": "postgres",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "event",
+      "PassFile": "/tmp/pgpassfile"
+    }
+  }
+}
