@@ -88,12 +88,15 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional
     public AuthResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        User user = (User) authentication.getPrincipal();
+        // Fetch user with organization eagerly loaded
+        User user = userRepository.findByEmailWithOrganization(request.getEmail())
+                .orElseThrow(() -> new BusinessException("User not found"));
 
         // Update last login
         user.setLastLoginAt(LocalDateTime.now());
@@ -114,6 +117,7 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public AuthResponse refreshToken(String refreshToken) {
         if (!tokenProvider.validateToken(refreshToken)) {
             throw new BusinessException("Invalid refresh token");
@@ -122,7 +126,7 @@ public class AuthService {
         String username = tokenProvider.getUsernameFromToken(refreshToken);
         String newAccessToken = tokenProvider.generateTokenFromUsername(username);
 
-        User user = userRepository.findByEmail(username)
+        User user = userRepository.findByEmailWithOrganization(username)
                 .orElseThrow(() -> new BusinessException("User not found"));
 
         return AuthResponse.builder()

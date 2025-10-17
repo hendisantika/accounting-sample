@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * To change this template use File | Settings | File Templates.
  */
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication", description = "Authentication endpoints")
 public class AuthController {
