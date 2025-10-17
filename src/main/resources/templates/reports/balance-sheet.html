@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Balance Sheet Report</title>
+</head>
+<body>
+<nav aria-label="breadcrumb" layout:fragment="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/reports}">Reports</a></li>
+        <li class="breadcrumb-item active">Balance Sheet</li>
+    </ol>
+</nav>
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <h1 class="h3 mb-4">Balance Sheet Report</h1>
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            This report is under development. Please check back later.
+        </div>
+    </div>
+</div>
+</body>
+</html>

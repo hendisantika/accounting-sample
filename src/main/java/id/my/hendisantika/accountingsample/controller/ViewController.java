@@ -194,4 +194,46 @@ public class ViewController {
     public String newJournalEntry() {
         return "journal/form";
     }
+
+    // ========== Reports Views ==========
+
+    @GetMapping("/reports/profit-loss")
+    public String profitLossReport() {
+        return "reports/profit-loss";
+    }
+
+    @GetMapping("/reports/balance-sheet")
+    public String balanceSheetReport() {
+        return "reports/balance-sheet";
+    }
+
+    @GetMapping("/reports/cash-flow")
+    public String cashFlowReport() {
+        return "reports/cash-flow";
+    }
+
+    @GetMapping("/reports/trial-balance")
+    public String trialBalanceReport() {
+        return "reports/trial-balance";
+    }
+
+    @GetMapping("/reports/aged-receivables")
+    public String agedReceivablesReport() {
+        return "reports/aged-receivables";
+    }
+
+    @GetMapping("/reports/aged-payables")
+    public String agedPayablesReport() {
+        return "reports/aged-payables";
+    }
+
+    @GetMapping("/reports/sales")
+    public String salesReport() {
+        return "reports/sales";
+    }
+
+    @GetMapping("/reports/purchases")
+    public String purchasesReport() {
+        return "reports/purchases";
+    }
 }

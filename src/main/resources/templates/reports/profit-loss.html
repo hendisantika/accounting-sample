@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Profit & Loss Report</title>
+</head>
+<body>
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" layout:fragment="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/reports}">Reports</a></li>
+        <li class="breadcrumb-item active">Profit & Loss</li>
+    </ol>
+</nav>
+
+<!-- Main Content -->
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="h3 mb-2">Profit & Loss Statement</h1>
+                <p class="text-muted">Income Statement for the selected period</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-outline-primary" onclick="window.print()">
+                    <i class="fas fa-print me-2"></i>Print
+                </button>
+                <button class="btn btn-outline-success">
+                    <i class="fas fa-file-excel me-2"></i>Export
+                </button>
+            </div>
+        </div>
+
+        <!-- Date Range Selector -->
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <form class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label" for="periodType">Period</label>
+                        <select class="form-select" id="periodType">
+                            <option selected value="thisMonth">This Month</option>
+                            <option value="lastMonth">Last Month</option>
+                            <option value="thisQuarter">This Quarter</option>
+                            <option value="lastQuarter">Last Quarter</option>
+                            <option value="thisYear">This Year</option>
+                            <option value="lastYear">Last Year</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="startDate">From</label>
+                        <input class="form-control" id="startDate" type="date">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="endDate">To</label>
+                        <input class="form-control" id="endDate" type="date">
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary w-100" type="button">
+                            <i class="fas fa-sync me-2"></i>Update Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Report Content -->
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <h4>Company Name</h4>
+                    <h5>Profit & Loss Statement</h5>
+                    <p class="text-muted">January 1, 2025 - January 31, 2025</p>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <!-- Revenue Section -->
+                        <thead>
+                        <tr class="table-light">
+                            <th colspan="2" style="font-size: 1.1rem; font-weight: 600;">REVENUE</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="ps-4">Sales Revenue</td>
+                            <td class="text-end">$125,000.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Service Revenue</td>
+                            <td class="text-end">$45,000.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Other Revenue</td>
+                            <td class="text-end">$5,000.00</td>
+                        </tr>
+                        <tr class="table-secondary fw-bold">
+                            <td>Total Revenue</td>
+                            <td class="text-end">$175,000.00</td>
+                        </tr>
+                        </tbody>
+
+                        <!-- Cost of Goods Sold Section -->
+                        <thead>
+                        <tr class="table-light">
+                            <th colspan="2" style="font-size: 1.1rem; font-weight: 600;">COST OF GOODS SOLD</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="ps-4">Cost of Materials</td>
+                            <td class="text-end">$50,000.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Direct Labor</td>
+                            <td class="text-end">$25,000.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Manufacturing Overhead</td>
+                            <td class="text-end">$10,000.00</td>
+                        </tr>
+                        <tr class="table-secondary fw-bold">
+                            <td>Total COGS</td>
+                            <td class="text-end">$85,000.00</td>
+                        </tr>
+                        <tr class="table-primary fw-bold">
+                            <td>GROSS PROFIT</td>
+                            <td class="text-end">$90,000.00</td>
+                        </tr>
+                        </tbody>
+
+                        <!-- Operating Expenses Section -->
+                        <thead>
+                        <tr class="table-light">
+                            <th colspan="2" style="font-size: 1.1rem; font-weight: 600;">OPERATING EXPENSES</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="ps-4">Salaries & Wages</td>
+                            <td class="text-end">$35,000.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Rent</td>
+                            <td class="text-end">$8,000.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Utilities</td>
+                            <td class="text-end">$2,500.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Marketing & Advertising</td>
+                            <td class="text-end">$5,000.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Office Supplies</td>
+                            <td class="text-end">$1,500.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Depreciation</td>
+                            <td class="text-end">$3,000.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Other Expenses</td>
+                            <td class="text-end">$2,000.00</td>
+                        </tr>
+                        <tr class="table-secondary fw-bold">
+                            <td>Total Operating Expenses</td>
+                            <td class="text-end">$57,000.00</td>
+                        </tr>
+                        <tr class="table-primary fw-bold">
+                            <td>OPERATING INCOME</td>
+                            <td class="text-end">$33,000.00</td>
+                        </tr>
+                        </tbody>
+
+                        <!-- Other Income/Expenses Section -->
+                        <thead>
+                        <tr class="table-light">
+                            <th colspan="2" style="font-size: 1.1rem; font-weight: 600;">OTHER INCOME/EXPENSES</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="ps-4">Interest Income</td>
+                            <td class="text-end">$1,000.00</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Interest Expense</td>
+                            <td class="text-end text-danger">($500.00)</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">Gain/Loss on Assets</td>
+                            <td class="text-end">$500.00</td>
+                        </tr>
+                        <tr class="table-secondary fw-bold">
+                            <td>Total Other Income/Expenses</td>
+                            <td class="text-end">$1,000.00</td>
+                        </tr>
+                        </tbody>
+
+                        <!-- Net Income Section -->
+                        <tbody>
+                        <tr class="table-success fw-bold" style="font-size: 1.1rem;">
+                            <td>NET INCOME</td>
+                            <td class="text-end">$34,000.00</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">Gross Profit Margin</h6>
+                                <h3 class="text-primary">51.4%</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">Operating Profit Margin</h6>
+                                <h3 class="text-info">18.9%</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">Net Profit Margin</h6>
+                                <h3 class="text-success">19.4%</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="alert alert-info mt-4">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Note:</strong> This is sample data for demonstration purposes. Actual financial data will be
+            displayed when integrated with the backend API.
+        </div>
+    </div>
+</div>
+</body>
+</html>
