@@ -1,5 +1,10 @@
 package id.my.hendisantika.accountingsample.controller;
 
+import id.my.hendisantika.accountingsample.dto.invoice.InvoiceRequest;
+import id.my.hendisantika.accountingsample.service.CustomerService;
+import id.my.hendisantika.accountingsample.service.InvoiceService;
+import id.my.hendisantika.accountingsample.service.ItemService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +23,12 @@ import org.springframework.web.bind.annotation.PathVariable;
  */
 
 @Controller
+@RequiredArgsConstructor
 public class ViewController {
+
+    private final InvoiceService invoiceService;
+    private final CustomerService customerService;
+    private final ItemService itemService;
 
     // ========== Authentication Views ==========
 
@@ -70,13 +80,28 @@ public class ViewController {
     }
 
     @GetMapping("/invoices/new")
-    public String newInvoice() {
+    public String newInvoice(Model model) {
+        // Create empty invoice request for new invoice
+        InvoiceRequest invoice = new InvoiceRequest();
+        model.addAttribute("invoice", invoice);
+
+        // Add customers and items for dropdowns
+        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("items", itemService.getAllItems());
+
         return "invoices/form";
     }
 
     @GetMapping("/invoices/{id}/edit")
     public String editInvoice(@PathVariable Long id, Model model) {
+        // Fetch existing invoice
+        model.addAttribute("invoice", invoiceService.getInvoiceById(id));
         model.addAttribute("id", id);
+
+        // Add customers and items for dropdowns
+        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("items", itemService.getAllItems());
+
         return "invoices/form";
     }
 

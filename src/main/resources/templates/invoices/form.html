@@ -36,10 +36,10 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label" for="customer">Customer <span class="text-danger">*</span></label>
-                                    <select class="form-select" id="customer" required th:field="*{customer.id}">
+                                    <select class="form-select" id="customer" required th:field="*{customerId}">
                                         <option value="">Select Customer</option>
                                         <option th:each="customer : ${customers}"
-                                                th:text="${customer.name + (customer.company != null ? ' (' + customer.company + ')' : '')}"
+                                                th:text="${customer.name + (customer.companyName != null ? ' (' + customer.companyName + ')' : '')}"
                                                 th:value="${customer.id}">
                                             Customer
                                         </option>
@@ -172,7 +172,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label" for="terms">Terms & Conditions</label>
                                     <textarea class="form-control" id="terms" placeholder="Payment terms and conditions..." rows="4"
-                                              th:field="*{terms}"></textarea>
+                                              th:field="*{termsAndConditions}"></textarea>
                                 </div>
                             </div>
                         </div>

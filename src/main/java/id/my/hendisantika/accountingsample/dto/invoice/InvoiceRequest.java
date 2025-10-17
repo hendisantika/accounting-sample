@@ -2,11 +2,10 @@ package id.my.hendisantika.accountingsample.dto.invoice;
 
 import id.my.hendisantika.accountingsample.model.enums.InvoiceStatus;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,11 +23,12 @@ import java.util.List;
 @Data
 public class InvoiceRequest {
 
+    private Long id; // Optional, used for updates
+
     @NotNull(message = "Customer ID is required")
     private Long customerId;
 
-    @NotBlank(message = "Invoice number is required")
-    private String invoiceNumber;
+    private String invoiceNumber; // Auto-generated if not provided
 
     @NotNull(message = "Invoice date is required")
     private LocalDate invoiceDate;
@@ -38,7 +38,6 @@ public class InvoiceRequest {
 
     private InvoiceStatus status;
 
-    @NotEmpty(message = "At least one invoice item is required")
     @Valid
     private List<InvoiceItemRequest> items;
 
@@ -49,4 +48,13 @@ public class InvoiceRequest {
     private String billingAddress;
 
     private String shippingAddress;
+
+    // Financial summary fields (calculated)
+    private BigDecimal subtotal;
+
+    private BigDecimal taxAmount;
+
+    private BigDecimal totalAmount;
+
+    private BigDecimal paidAmount;
 }
