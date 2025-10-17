@@ -236,4 +236,38 @@ public class ViewController {
     public String purchasesReport() {
         return "reports/purchases";
     }
+
+    // ========== Support Views ==========
+
+    @GetMapping("/help")
+    public String help() {
+        return "support/help";
+    }
+
+    @GetMapping("/docs")
+    public String documentation() {
+        return "support/docs";
+    }
+
+    // ========== Other Views ==========
+
+    @GetMapping("/analytics")
+    public String analytics() {
+        return "analytics/index";
+    }
+
+    @GetMapping("/profile")
+    public String profile() {
+        return "user/profile";
+    }
+
+    @GetMapping("/organization")
+    public String organization() {
+        return "organization/settings";
+    }
+
+    @GetMapping("/settings")
+    public String settings() {
+        return "settings/index";
+    }
 }
