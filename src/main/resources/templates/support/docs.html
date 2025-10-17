@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Documentation</title>
+</head>
+<body>
+<nav aria-label="breadcrumb" layout:fragment="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+        <li class="breadcrumb-item active">Documentation</li>
+    </ol>
+</nav>
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <h1 class="h3 mb-4">Documentation</h1>
+        <div class="alert alert-info">
+            <i class="fas fa-book me-2"></i>
+            Documentation is being prepared. Please check back later or contact support for assistance.
+        </div>
+    </div>
+</div>
+</body>
+</html>
