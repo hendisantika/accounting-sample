@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Account Form</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h3 mb-0">New Account</h1>
+                <p class="text-muted">Add a new account to your chart of accounts</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label" for="code">Account Code *</label>
+                                <input class="form-control" id="code" placeholder="e.g., 1000" required type="text">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="name">Account Name *</label>
+                                <input class="form-control" id="name" placeholder="e.g., Cash" required type="text">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="type">Account Type *</label>
+                                <select class="form-select" id="type" required>
+                                    <option value="">Select account type...</option>
+                                    <option value="ASSET">Asset</option>
+                                    <option value="LIABILITY">Liability</option>
+                                    <option value="EQUITY">Equity</option>
+                                    <option value="REVENUE">Revenue</option>
+                                    <option value="EXPENSE">Expense</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="description">Description</label>
+                                <textarea class="form-control" id="description" rows="3"></textarea>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary" type="submit">Save Account</button>
+                                <a class="btn btn-secondary" th:href="@{/accounts}">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
