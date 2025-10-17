@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Profile</title>
+</head>
+<body>
+<nav aria-label="breadcrumb" layout:fragment="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+        <li class="breadcrumb-item active">My Profile</li>
+    </ol>
+</nav>
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <h1 class="h3 mb-4">My Profile</h1>
+        <div class="alert alert-info">
+            <i class="fas fa-user me-2"></i>
+            User profile page is under development. Please use the API endpoints to manage your profile.
+        </div>
+    </div>
+</div>
+</body>
+</html>
