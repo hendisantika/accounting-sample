@@ -4,8 +4,8 @@ services:
     container_name: accounting-postgres
     environment:
       POSTGRES_DB: accounting_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: yu71
+      POSTGRES_PASSWORD: 53cret
     ports:
       - "5433:5432"
     volumes:
