@@ -94,6 +94,16 @@
             <artifactId>chart.js</artifactId>
             <version>4.5.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>htmx.org</artifactId>
+            <version>2.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>alpinejs</artifactId>
+            <version>3.14.8</version>
+        </dependency>
 
         <!-- Redis for caching -->
         <dependency>

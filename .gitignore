@@ -7,6 +7,8 @@ logs
 postgres_data
 redis_data
 pgadmin_data
+redis_data
+minio_data
 
 ### STS ###
 .apt_generated
