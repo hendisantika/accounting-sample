@@ -1,35 +1,294 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+name: Deploy Dev
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Java CI with Maven
+permissions:
+  contents: write
+  pull-requests: write
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ mysql ]
+    paths:
+      - 'src/**'
+      - '.github/workflows/deploy_dev.yml'
+      - 'pom.xml'
+
+env:
+  IMAGE_TAG: ${{ github.run_number }}
+  CONTAINER_NAME: accounting-app
+  ECR_REPOSITORY: accounting-app
+
+  APP_SERVER_PORT: ${{ vars.APP_SERVER_PORT_DEV }}
+  APP_ENVIRONMENT: ${{ vars.APP_ENVIRONMENT_DEV }}
+  SPRING_DATASOURCE_URL: ${{ vars.SPRING_DATASOURCE_URL_DEV }}
+  SPRING_DATASOURCE_USERNAME: ${{ vars.SPRING_DATASOURCE_USERNAME_DEV }}
+  SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD_DEV }}
 
 jobs:
-  build:
-
+  project-build:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
-    - uses: actions/checkout@v6
-    - name: Set up JDK 25
-      uses: actions/setup-java@v5
-      with:
-        java-version: '25'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      - uses: actions/checkout@v6
+        name: Set checkout action token
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-    - name: Update dependency graph
-      uses: advanced-security/maven-dependency-submission-action@b275d12641ac2d2108b2cbb7598b154ad2f2cee8
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Set up the Maven dependencies caching
+        uses: actions/cache@v5
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Cache Maven packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
+      - name: Update dependency graph
+        uses: advanced-security/maven-dependency-submission-action@b275d12641ac2d2108b2cbb7598b154ad2f2cee8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  push-to-ecr:
+    runs-on: ubuntu-latest
+    needs: project-build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push with Jib
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.run_number }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          # Clear Docker config to prevent credential conflicts
+          rm -rf ~/.docker
+          mkdir -p ~/.docker
+          echo '{}' > ~/.docker/config.json
+
+          # Validate ECR registry is available
+          if [ -z "$ECR_REGISTRY" ]; then
+            echo "ERROR: ECR registry is empty. Check AWS credentials and ECR login."
+            exit 1
+          fi
+
+          # Full image path: registry/repository:tag
+          FULL_IMAGE="${ECR_REGISTRY}/accounting-app:${IMAGE_TAG}"
+          echo "Building and pushing to: ${FULL_IMAGE}"
+
+          # Get ECR password
+          ECR_PASSWORD=$(aws ecr get-login-password --region ${AWS_REGION})
+
+          # Build and push using Jib
+          mvn -B clean compile jib:build \
+            -Djib.to.image="${FULL_IMAGE}" \
+            -Djib.to.auth.username=AWS \
+            -Djib.to.auth.password="${ECR_PASSWORD}"
+
+  deploy:
+    needs: push-to-ecr
+    name: deploy image
+    runs-on: ubuntu-24.04
+    environment: development
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: private
+
+      - name: Add Server key
+        run: |
+          touch key.txt && echo "${{ secrets.SSH_KEY }}" > key.txt
+          chmod 600 key.txt
+
+      - name: Create SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/private.key
+          sudo chmod 600 ~/.ssh/private.key
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          sudo chmod 600 ~/.ssh/known_hosts
+        shell: bash
+        env:
+          SERVER_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SERVER_PORT: ${{ secrets.SSH_PORT }}
+          SERVER_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PRIVATE_KEY: ${{secrets.SSH_KEY}}
+          SSH_KNOWN_HOSTS: ${{secrets.SSH_HOST}}
+
+      - name: Set all environment variables
+        env:
+          SERVER_HOST: ${{ secrets.SSH_HOST }}
+          SERVER_PORT: ${{ secrets.SSH_PORT }}
+          SERVER_USERNAME: ${{ secrets.SSH_USERNAME }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: accounting-app
+          IMAGE_TAG: ${{ github.run_number }}
+          CONTAINER_NAME: accounting-app
+          AWS_ACCESS: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME_DEV }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
+
+          APP_SERVER_PORT: ${{ vars.APP_SERVER_PORT_DEV }}
+          APP_ENVIRONMENT: ${{ vars.APP_ENVIRONMENT_DEV }}
+          SPRING_DATASOURCE_URL: ${{ vars.SPRING_DATASOURCE_URL_DEV }}
+          SPRING_DATASOURCE_USERNAME: ${{ vars.SPRING_DATASOURCE_USERNAME_DEV }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD_DEV }}
+          SPRING_PROFILES_ACTIVE: ${{ vars.SPRING_PROFILES_ACTIVE_DEV }}
+
+        run: |
+          echo AWS_REGION=$AWS_REGION >> .env
+          echo AWS_ACCESS=$AWS_ACCESS >> .env
+          echo AWS_SECRET=$AWS_SECRET >> .env
+          echo AWS_BUCKET_NAME=$AWS_BUCKET_NAME >> .env
+          echo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID >> .env
+          echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY >> .env
+          echo ECR_REGISTRY=$ECR_REGISTRY >> .env
+          echo CONTAINER_NAME=$CONTAINER_NAME >> .env
+          echo ECR_REPOSITORY=$ECR_REPOSITORY >> .env
+          echo IMAGE_TAG=$IMAGE_TAG >> .env
+          echo APP_SERVER_PORT=$APP_SERVER_PORT >> .env
+          echo APP_ENVIRONMENT=$APP_ENVIRONMENT >> .env
+          echo SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL >> .env
+          echo SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME >> .env
+          echo SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD >> .env
+          echo SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE >> .env
+
+      - name: Check SSH server connectivity
+        run: |
+          echo "Testing connectivity to SSH server..."
+          echo "Host: ${{ secrets.SSH_HOST }}"
+          echo "Port: ${{ secrets.SSH_PORT }}"
+
+          # Test basic connectivity
+          if timeout 10 bash -c "cat < /dev/null > /dev/tcp/${{ secrets.SSH_HOST }}/${{ secrets.SSH_PORT }}"; then
+            echo "✓ Port is reachable"
+          else
+            echo "✗ Port is NOT reachable - SSH server may be behind firewall"
+            echo "GitHub Actions IP ranges need to be whitelisted on your server"
+            echo "See: https://api.github.com/meta for GitHub IP ranges"
+          fi
+
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1.2.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          timeout: 120s
+          command_timeout: 30m
+          debug: true
+          script: |
+            # Create directory if not exists
+            mkdir -p ~/accounting-app
+            cd ~/accounting-app
+
+            # Create .env file
+            cat > .env << EOF
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            AWS_ACCESS=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET=${{ secrets.AWS_ACCESS_SECRET_KEY }}
+            AWS_BUCKET_NAME=${{ vars.AWS_BUCKET_NAME_DEV }}
+            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_ACCESS_SECRET_KEY }}
+            ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+            CONTAINER_NAME=accounting-app
+            ECR_REPOSITORY=accounting-app
+            IMAGE_TAG=${{ github.run_number }}
+            APP_SERVER_PORT=${{ vars.APP_SERVER_PORT_DEV }}
+            APP_ENVIRONMENT=${{ vars.APP_ENVIRONMENT_DEV }}
+            SPRING_DATASOURCE_URL=${{ vars.SPRING_DATASOURCE_URL_DEV }}
+            SPRING_DATASOURCE_USERNAME=${{ vars.SPRING_DATASOURCE_USERNAME_DEV }}
+            SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD_DEV }}
+            SPRING_PROFILES_ACTIVE=${{ vars.SPRING_PROFILES_ACTIVE_DEV }}
+            EOF
+
+            # Source environment variables
+            set +a
+            source .env
+
+            # Login to ECR
+            echo "Logging into ECR..."
+            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+            # Stop and remove existing container
+            if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
+                echo "Stopping existing container..."
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
+            fi
+
+            # Clean up docker resources
+            docker system prune -af || true
+
+            # Pull and run new container
+            FULL_IMAGE="${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+            echo "Starting new container with image: $FULL_IMAGE"
+            docker run -d --restart unless-stopped \
+              -p $APP_SERVER_PORT:$APP_SERVER_PORT \
+              --env-file .env \
+              --name $CONTAINER_NAME \
+              $FULL_IMAGE
+
+            # Verify container is running
+            sleep 5
+            if docker ps | grep -q $CONTAINER_NAME; then
+              echo "Container deployed successfully!"
+              docker ps | grep $CONTAINER_NAME
+            else
+              echo "Container failed to start"
+              docker logs $CONTAINER_NAME
+              exit 1
+            fi
+            
