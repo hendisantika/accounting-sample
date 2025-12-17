@@ -1,12 +1,12 @@
 -- Accounts table (Chart of Accounts)
 CREATE TABLE accounts (
-    id BIGSERIAL PRIMARY KEY,
-    organization_id BIGINT NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+                          id                BIGINT AUTO_INCREMENT PRIMARY KEY,
+                          organization_id   BIGINT    NOT NULL,
     account_code VARCHAR(50) NOT NULL,
     account_name VARCHAR(255) NOT NULL,
     account_type VARCHAR(50) NOT NULL,
     account_category VARCHAR(50),
-    parent_account_id BIGINT REFERENCES accounts(id),
+                          parent_account_id BIGINT,
     currency_code VARCHAR(3) NOT NULL DEFAULT 'USD',
     description TEXT,
     is_active BOOLEAN NOT NULL DEFAULT true,
@@ -15,9 +15,11 @@ CREATE TABLE accounts (
     opening_balance DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
     current_balance DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uk_accounts_org_code UNIQUE (organization_id, account_code)
-);
+                          updated_at        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                          CONSTRAINT uk_accounts_org_code UNIQUE (organization_id, account_code),
+                          CONSTRAINT fk_accounts_organization FOREIGN KEY (organization_id) REFERENCES organizations (id) ON DELETE CASCADE,
+                          CONSTRAINT fk_accounts_parent FOREIGN KEY (parent_account_id) REFERENCES accounts (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Indexes
 CREATE INDEX idx_accounts_organization_id ON accounts(organization_id);

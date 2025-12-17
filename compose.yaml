@@ -1,50 +1,51 @@
 services:
-  postgres:
-    image: postgres:18.0-alpine3.22
-    container_name: accounting-postgres
+  mysql:
+    image: mysql:8.4
+    container_name: accounting-mysql
     environment:
-      POSTGRES_DB: accounting_db
-      POSTGRES_USER: yu71
-      POSTGRES_PASSWORD: 53cret
+      MYSQL_ROOT_PASSWORD: r00t
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: accounting_db
     ports:
-      - "5433:5432"
+      - "3312:3306"
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pr00t" ]
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
   redis:
-    image: redis:7.2.5-alpine3.20
+    image: redis:7-alpine
     container_name: accounting-redis
     ports:
       - "6379:6379"
     volumes:
-      - ./redis_data:/data
+      - redis_data:/data
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: accounting-pgadmin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: accounting-phpmyadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_LISTEN_PORT: 5050
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: r00t
     ports:
-      - "5050:80"
-    volumes:
-      - ./pgadmin_data:/var/lib/pgadmin
-      - ./pgadmin.json:/pgadmin4/servers.json
+      - "8081:80"
     depends_on:
-      - postgres
+      - mysql
+    restart: unless-stopped
 
   minio:
     image: minio/minio:latest
@@ -56,16 +57,16 @@ services:
       - "9000:9000"
       - "9001:9001"
     volumes:
-      - ./minio_data:/data
+      - minio_data:/data
     command: server /data --console-address ":9001"
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
-      interval: 30s
-      timeout: 20s
-      retries: 3
+      test: [ "CMD", "mc", "ready", "local" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
 volumes:
-  postgres_data:
+  mysql_data:
   redis_data:
-  pgadmin_data:
   minio_data:

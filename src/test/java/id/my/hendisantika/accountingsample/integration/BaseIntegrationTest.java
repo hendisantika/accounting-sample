@@ -1,25 +1,23 @@
 package id.my.hendisantika.accountingsample.integration;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * Base class for integration tests using Testcontainers.
- * This class sets up a PostgreSQL container that will be shared across all integration tests.
+ * This class sets up a MySQL container that will be shared across all integration tests.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
 @Testcontainers
 public abstract class BaseIntegrationTest {
 
     @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17-alpine")
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.4")
             .withDatabaseName("accounting_test")
             .withUsername("test")
             .withPassword("test")
@@ -27,10 +25,12 @@ public abstract class BaseIntegrationTest {
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
+        registry.add("spring.datasource.url", mysql::getJdbcUrl);
+        registry.add("spring.datasource.username", mysql::getUsername);
+        registry.add("spring.datasource.password", mysql::getPassword);
+        registry.add("spring.datasource.driver-class-name", () -> "com.mysql.cj.jdbc.Driver");
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "validate");
+        registry.add("spring.jpa.properties.hibernate.dialect", () -> "org.hibernate.dialect.MySQLDialect");
         registry.add("spring.flyway.enabled", () -> "true");
 
         // Disable Redis for tests
@@ -48,6 +48,6 @@ public abstract class BaseIntegrationTest {
 
     @BeforeAll
     static void beforeAll() {
-        postgres.start();
+        mysql.start();
     }
 }

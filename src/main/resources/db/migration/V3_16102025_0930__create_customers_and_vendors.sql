@@ -1,7 +1,7 @@
 -- Customers table
 CREATE TABLE customers (
-    id BIGSERIAL PRIMARY KEY,
-    organization_id BIGINT NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+                           id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+                           organization_id BIGINT    NOT NULL,
     customer_code VARCHAR(50) NOT NULL,
     display_name VARCHAR(255) NOT NULL,
     company_name VARCHAR(255),
@@ -31,14 +31,15 @@ CREATE TABLE customers (
     is_active BOOLEAN NOT NULL DEFAULT true,
     outstanding_balance DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uk_customers_org_code UNIQUE (organization_id, customer_code)
-);
+                           updated_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                           CONSTRAINT uk_customers_org_code UNIQUE (organization_id, customer_code),
+                           CONSTRAINT fk_customers_organization FOREIGN KEY (organization_id) REFERENCES organizations (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Vendors table
 CREATE TABLE vendors (
-    id BIGSERIAL PRIMARY KEY,
-    organization_id BIGINT NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+                         id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         organization_id BIGINT    NOT NULL,
     vendor_code VARCHAR(50) NOT NULL,
     display_name VARCHAR(255) NOT NULL,
     company_name VARCHAR(255),
@@ -67,9 +68,10 @@ CREATE TABLE vendors (
     credit_limit DECIMAL(19,4),
     outstanding_balance DECIMAL(19,4) NOT NULL DEFAULT 0.0000,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uk_vendors_org_code UNIQUE (organization_id, vendor_code)
-);
+                         updated_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                         CONSTRAINT uk_vendors_org_code UNIQUE (organization_id, vendor_code),
+                         CONSTRAINT fk_vendors_organization FOREIGN KEY (organization_id) REFERENCES organizations (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Indexes
 CREATE INDEX idx_customers_organization_id ON customers(organization_id);
