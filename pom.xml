@@ -16,6 +16,8 @@
     <properties>
         <java.version>25</java.version>
         <testcontainers.version>1.21.3</testcontainers.version>
+        <start-class>id.my.hendisantika.accountingsample.AccountingSampleApplication</start-class>
+        <app.image.name>accounting-app</app.image.name>
     </properties>
     <dependencies>
         <!-- Spring Boot Starters -->
@@ -311,6 +313,25 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <from>
+                        <image>public.ecr.aws/amazoncorretto/amazoncorretto:25</image>
+                    </from>
+                    <to>
+                        <image>${project.name}:${project.version}</image>
+                    </to>
+                    <container>
+                        <ports>
+                            <port>8090</port>
+                        </ports>
+                        <format>OCI</format>
+                    </container>
                 </configuration>
             </plugin>
         </plugins>
