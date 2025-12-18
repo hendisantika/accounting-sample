@@ -105,6 +105,11 @@ public class ViewController {
         return "invoices/form";
     }
 
+    @GetMapping("/invoices/recurring")
+    public String recurringInvoices() {
+        return "invoices/recurring";
+    }
+
     // ========== Vendor Views ==========
 
     @GetMapping("/vendors")
