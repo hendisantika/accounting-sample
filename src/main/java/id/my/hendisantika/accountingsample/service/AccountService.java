@@ -36,6 +36,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final OrganizationRepository organizationRepository;
 
+    @Transactional(readOnly = true)
     public List<AccountResponse> getAllAccounts() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return accountRepository.findByOrganizationId(orgId).stream()
@@ -43,6 +44,7 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<AccountResponse> getAccountsByType(AccountType accountType) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return accountRepository.findByAccountTypeAndOrganizationId(accountType, orgId).stream()
@@ -50,6 +52,7 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<AccountResponse> getRootAccounts() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return accountRepository.findRootAccountsByOrganizationId(orgId).stream()
@@ -57,6 +60,7 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<AccountResponse> getChildAccounts(Long parentId) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return accountRepository.findByParentIdAndOrganizationId(parentId, orgId).stream()
@@ -64,6 +68,7 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public AccountResponse getAccountById(Long id) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Account account = accountRepository.findByIdAndOrganizationId(id, orgId)
@@ -71,6 +76,7 @@ public class AccountService {
         return mapToResponse(account);
     }
 
+    @Transactional(readOnly = true)
     public AccountResponse getAccountByCode(String code) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Account account = accountRepository.findByCodeAndOrganizationId(code, orgId)

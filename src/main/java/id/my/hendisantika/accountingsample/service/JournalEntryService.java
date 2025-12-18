@@ -42,6 +42,7 @@ public class JournalEntryService {
     private final AccountRepository accountRepository;
     private final OrganizationRepository organizationRepository;
 
+    @Transactional(readOnly = true)
     public List<JournalEntryResponse> getAllJournalEntries() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return journalEntryRepository.findByOrganizationId(orgId).stream()
@@ -49,6 +50,7 @@ public class JournalEntryService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<JournalEntryResponse> getJournalEntriesByStatus(JournalEntryStatus status) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return journalEntryRepository.findByStatusAndOrganizationId(status, orgId).stream()
@@ -56,6 +58,7 @@ public class JournalEntryService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public JournalEntryResponse getJournalEntryById(Long id) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         JournalEntry journalEntry = journalEntryRepository.findByIdAndOrganizationId(id, orgId)

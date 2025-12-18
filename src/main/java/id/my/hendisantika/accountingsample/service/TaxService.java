@@ -36,6 +36,7 @@ public class TaxService {
     private final TaxRepository taxRepository;
     private final OrganizationRepository organizationRepository;
 
+    @Transactional(readOnly = true)
     public List<TaxResponse> getAllTaxes() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return taxRepository.findByOrganizationId(orgId).stream()
@@ -43,6 +44,7 @@ public class TaxService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<TaxResponse> getActiveTaxes() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return taxRepository.findByIsActiveAndOrganizationId(true, orgId).stream()
@@ -50,6 +52,7 @@ public class TaxService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public TaxResponse getTaxById(Long id) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Tax tax = taxRepository.findByIdAndOrganizationId(id, orgId)
@@ -57,6 +60,7 @@ public class TaxService {
         return mapToResponse(tax);
     }
 
+    @Transactional(readOnly = true)
     public TaxResponse getTaxByCode(String code) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Tax tax = taxRepository.findByCodeAndOrganizationId(code, orgId)
@@ -124,6 +128,7 @@ public class TaxService {
         taxRepository.delete(tax);
     }
 
+    @Transactional(readOnly = true)
     public BigDecimal calculateTax(BigDecimal amount, Long taxId) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Tax tax = taxRepository.findByIdAndOrganizationId(taxId, orgId)

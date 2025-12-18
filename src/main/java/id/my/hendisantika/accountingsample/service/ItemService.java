@@ -42,6 +42,7 @@ public class ItemService {
     private final AccountRepository accountRepository;
     private final TaxRepository taxRepository;
 
+    @Transactional(readOnly = true)
     public List<ItemResponse> getAllItems() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return itemRepository.findByOrganizationId(orgId).stream()
@@ -49,6 +50,7 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<ItemResponse> getActiveItems() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return itemRepository.findByIsActiveAndOrganizationId(true, orgId).stream()
@@ -56,6 +58,7 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<ItemResponse> getItemsByType(ItemType itemType) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return itemRepository.findByItemTypeAndOrganizationId(itemType, orgId).stream()
@@ -63,6 +66,7 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<ItemResponse> searchItems(String name) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return itemRepository.findByNameContainingIgnoreCaseAndOrganizationId(name, orgId).stream()
@@ -70,6 +74,7 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ItemResponse getItemById(Long id) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Item item = itemRepository.findByIdAndOrganizationId(id, orgId)

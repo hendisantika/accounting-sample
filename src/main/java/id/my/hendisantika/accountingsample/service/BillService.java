@@ -5,11 +5,7 @@ import id.my.hendisantika.accountingsample.dto.bill.BillRequest;
 import id.my.hendisantika.accountingsample.dto.bill.BillResponse;
 import id.my.hendisantika.accountingsample.exception.BusinessException;
 import id.my.hendisantika.accountingsample.exception.ResourceNotFoundException;
-import id.my.hendisantika.accountingsample.model.Bill;
-import id.my.hendisantika.accountingsample.model.BillItem;
-import id.my.hendisantika.accountingsample.model.Item;
-import id.my.hendisantika.accountingsample.model.Organization;
-import id.my.hendisantika.accountingsample.model.Vendor;
+import id.my.hendisantika.accountingsample.model.*;
 import id.my.hendisantika.accountingsample.model.enums.BillStatus;
 import id.my.hendisantika.accountingsample.repository.BillRepository;
 import id.my.hendisantika.accountingsample.repository.ItemRepository;
@@ -47,6 +43,7 @@ public class BillService {
     private final ItemRepository itemRepository;
     private final OrganizationRepository organizationRepository;
 
+    @Transactional(readOnly = true)
     public List<BillResponse> getAllBills() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return billRepository.findByOrganizationId(orgId).stream()
@@ -54,6 +51,7 @@ public class BillService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<BillResponse> getBillsByStatus(BillStatus status) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return billRepository.findByStatusAndOrganizationId(status, orgId).stream()
@@ -61,6 +59,7 @@ public class BillService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<BillResponse> getBillsByVendor(Long vendorId) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return billRepository.findByVendorIdAndOrganizationId(vendorId, orgId).stream()
@@ -68,6 +67,7 @@ public class BillService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<BillResponse> getOverdueBills() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         List<BillStatus> statuses = List.of(BillStatus.SUBMITTED, BillStatus.APPROVED, BillStatus.PARTIALLY_PAID);
@@ -78,6 +78,7 @@ public class BillService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<BillResponse> searchBills(String billNumber) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return billRepository.findByBillNumberContainingIgnoreCaseAndOrganizationId(billNumber, orgId).stream()
@@ -85,6 +86,7 @@ public class BillService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public BillResponse getBillById(Long id) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Bill bill = billRepository.findByIdAndOrganizationId(id, orgId)

@@ -35,6 +35,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final OrganizationRepository organizationRepository;
 
+    @Transactional(readOnly = true)
     public List<CustomerResponse> getAllCustomers() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return customerRepository.findByOrganizationId(orgId).stream()
@@ -42,6 +43,7 @@ public class CustomerService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<CustomerResponse> getActiveCustomers() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return customerRepository.findByIsActiveAndOrganizationId(true, orgId).stream()
@@ -49,6 +51,7 @@ public class CustomerService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<CustomerResponse> searchCustomers(String name) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return customerRepository.findByNameContainingIgnoreCaseAndOrganizationId(name, orgId).stream()
@@ -56,6 +59,7 @@ public class CustomerService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse getCustomerById(Long id) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Customer customer = customerRepository.findByIdAndOrganizationId(id, orgId)

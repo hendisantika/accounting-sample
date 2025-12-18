@@ -27,6 +27,7 @@ public class OrganizationService {
 
     private final OrganizationRepository organizationRepository;
 
+    @Transactional(readOnly = true)
     public OrganizationResponse getCurrentOrganization() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Organization organization = organizationRepository.findById(orgId)

@@ -38,6 +38,7 @@ public class UserService {
     private final OrganizationRepository organizationRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return userRepository.findByOrganizationId(orgId).stream()
@@ -45,6 +46,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public UserResponse getUserById(Long id) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         User user = userRepository.findByIdAndOrganizationId(id, orgId)
@@ -52,6 +54,7 @@ public class UserService {
         return mapToResponse(user);
     }
 
+    @Transactional(readOnly = true)
     public UserResponse getCurrentUser() {
         User user = SecurityUtils.getCurrentUser();
         if (user == null) {

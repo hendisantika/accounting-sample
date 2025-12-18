@@ -35,6 +35,7 @@ public class VendorService {
     private final VendorRepository vendorRepository;
     private final OrganizationRepository organizationRepository;
 
+    @Transactional(readOnly = true)
     public List<VendorResponse> getAllVendors() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return vendorRepository.findByOrganizationId(orgId).stream()
@@ -42,6 +43,7 @@ public class VendorService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<VendorResponse> getActiveVendors() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return vendorRepository.findByIsActiveAndOrganizationId(true, orgId).stream()
@@ -49,6 +51,7 @@ public class VendorService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<VendorResponse> searchVendors(String name) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return vendorRepository.findByNameContainingIgnoreCaseAndOrganizationId(name, orgId).stream()
@@ -56,6 +59,7 @@ public class VendorService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public VendorResponse getVendorById(Long id) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Vendor vendor = vendorRepository.findByIdAndOrganizationId(id, orgId)

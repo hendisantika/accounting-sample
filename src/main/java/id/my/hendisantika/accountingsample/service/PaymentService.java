@@ -4,21 +4,9 @@ import id.my.hendisantika.accountingsample.dto.payment.PaymentRequest;
 import id.my.hendisantika.accountingsample.dto.payment.PaymentResponse;
 import id.my.hendisantika.accountingsample.exception.BusinessException;
 import id.my.hendisantika.accountingsample.exception.ResourceNotFoundException;
-import id.my.hendisantika.accountingsample.model.Account;
-import id.my.hendisantika.accountingsample.model.Bill;
-import id.my.hendisantika.accountingsample.model.Customer;
-import id.my.hendisantika.accountingsample.model.Invoice;
-import id.my.hendisantika.accountingsample.model.Organization;
-import id.my.hendisantika.accountingsample.model.Payment;
-import id.my.hendisantika.accountingsample.model.Vendor;
+import id.my.hendisantika.accountingsample.model.*;
 import id.my.hendisantika.accountingsample.model.enums.PaymentType;
-import id.my.hendisantika.accountingsample.repository.AccountRepository;
-import id.my.hendisantika.accountingsample.repository.BillRepository;
-import id.my.hendisantika.accountingsample.repository.CustomerRepository;
-import id.my.hendisantika.accountingsample.repository.InvoiceRepository;
-import id.my.hendisantika.accountingsample.repository.OrganizationRepository;
-import id.my.hendisantika.accountingsample.repository.PaymentRepository;
-import id.my.hendisantika.accountingsample.repository.VendorRepository;
+import id.my.hendisantika.accountingsample.repository.*;
 import id.my.hendisantika.accountingsample.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,6 +39,7 @@ public class PaymentService {
     private final InvoiceRepository invoiceRepository;
     private final BillRepository billRepository;
 
+    @Transactional(readOnly = true)
     public List<PaymentResponse> getAllPayments() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return paymentRepository.findByOrganizationId(orgId).stream()
@@ -58,6 +47,7 @@ public class PaymentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<PaymentResponse> getPaymentsByType(PaymentType paymentType) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return paymentRepository.findByPaymentTypeAndOrganizationId(paymentType, orgId).stream()
@@ -65,6 +55,7 @@ public class PaymentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<PaymentResponse> getPaymentsByCustomer(Long customerId) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         // Verify customer belongs to organization
@@ -76,6 +67,7 @@ public class PaymentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<PaymentResponse> getPaymentsByVendor(Long vendorId) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         // Verify vendor belongs to organization
@@ -87,6 +79,7 @@ public class PaymentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public PaymentResponse getPaymentById(Long id) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Payment payment = paymentRepository.findByIdAndOrganizationId(id, orgId)

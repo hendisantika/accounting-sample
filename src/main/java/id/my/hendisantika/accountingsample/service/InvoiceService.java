@@ -5,17 +5,9 @@ import id.my.hendisantika.accountingsample.dto.invoice.InvoiceRequest;
 import id.my.hendisantika.accountingsample.dto.invoice.InvoiceResponse;
 import id.my.hendisantika.accountingsample.exception.BusinessException;
 import id.my.hendisantika.accountingsample.exception.ResourceNotFoundException;
-import id.my.hendisantika.accountingsample.model.Customer;
-import id.my.hendisantika.accountingsample.model.Invoice;
-import id.my.hendisantika.accountingsample.model.InvoiceItem;
-import id.my.hendisantika.accountingsample.model.Item;
-import id.my.hendisantika.accountingsample.model.Organization;
+import id.my.hendisantika.accountingsample.model.*;
 import id.my.hendisantika.accountingsample.model.enums.InvoiceStatus;
-import id.my.hendisantika.accountingsample.repository.CustomerRepository;
-import id.my.hendisantika.accountingsample.repository.InvoiceItemRepository;
-import id.my.hendisantika.accountingsample.repository.InvoiceRepository;
-import id.my.hendisantika.accountingsample.repository.ItemRepository;
-import id.my.hendisantika.accountingsample.repository.OrganizationRepository;
+import id.my.hendisantika.accountingsample.repository.*;
 import id.my.hendisantika.accountingsample.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,6 +41,7 @@ public class InvoiceService {
     private final CustomerRepository customerRepository;
     private final ItemRepository itemRepository;
 
+    @Transactional(readOnly = true)
     public List<InvoiceResponse> getAllInvoices() {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return invoiceRepository.findByOrganizationId(orgId).stream()
@@ -56,6 +49,7 @@ public class InvoiceService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<InvoiceResponse> getInvoicesByCustomer(Long customerId) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return invoiceRepository.findByCustomerIdAndOrganizationId(customerId, orgId).stream()
@@ -63,6 +57,7 @@ public class InvoiceService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<InvoiceResponse> getInvoicesByStatus(InvoiceStatus status) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return invoiceRepository.findByStatusAndOrganizationId(status, orgId).stream()
@@ -70,6 +65,7 @@ public class InvoiceService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<InvoiceResponse> getInvoicesByDateRange(LocalDate startDate, LocalDate endDate) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         return invoiceRepository.findByInvoiceDateBetweenAndOrganizationId(startDate, endDate, orgId).stream()
@@ -77,6 +73,7 @@ public class InvoiceService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public InvoiceResponse getInvoiceById(Long id) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
         Invoice invoice = invoiceRepository.findByIdAndOrganizationId(id, orgId)
