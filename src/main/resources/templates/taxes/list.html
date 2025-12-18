@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <title>Taxes</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Tax Rates</h1>
+                        <p class="text-muted">Manage tax rates and configurations</p>
+                    </div>
+                    <button class="btn btn-primary" data-bs-target="#taxModal" data-bs-toggle="modal">
+                        <i class="bi bi-plus-circle me-2"></i>Add Tax Rate
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tax Rates List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Tax Rate List</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Tax Name</th>
+                                    <th>Code</th>
+                                    <th>Rate (%)</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Standard VAT</td>
+                                    <td>VAT</td>
+                                    <td>10%</td>
+                                    <td>Sales & Purchase</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Zero Rate</td>
+                                    <td>ZERO</td>
+                                    <td>0%</td>
+                                    <td>Sales & Purchase</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

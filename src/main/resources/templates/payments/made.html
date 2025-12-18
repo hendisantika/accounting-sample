@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payments Made</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Payments Made</h1>
+                        <p class="text-muted">Track payments made to vendors</p>
+                    </div>
+                    <a class="btn btn-primary" th:href="@{/payments/new}">
+                        <i class="bi bi-plus-circle me-2"></i>Record Payment
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card border-left-danger shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Total Paid (This Month)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalPaid">$0.00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-left-info shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Payment Count</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="paymentCount">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-left-warning shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Outstanding AP</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="outstandingAP">$0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payments Made List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Payments Made List</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Payment #</th>
+                                    <th>Vendor</th>
+                                    <th>Date</th>
+                                    <th>Bill</th>
+                                    <th>Method</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center text-muted py-4" colspan="7">
+                                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                        No payments made yet.
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

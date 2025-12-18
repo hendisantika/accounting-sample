@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <title>Currency Settings</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Currency Settings</h1>
+                        <p class="text-muted">Manage currencies and exchange rates</p>
+                    </div>
+                    <button class="btn btn-primary" data-bs-target="#currencyModal" data-bs-toggle="modal">
+                        <i class="bi bi-plus-circle me-2"></i>Add Currency
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Base Currency Card -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Base Currency</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <span class="h3 mb-0">$</span>
+                            </div>
+                            <div>
+                                <h5 class="mb-0">US Dollar (USD)</h5>
+                                <p class="text-muted mb-0">All transactions are recorded in this currency</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Currencies List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Enabled Currencies</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Currency</th>
+                                    <th>Code</th>
+                                    <th>Symbol</th>
+                                    <th>Exchange Rate</th>
+                                    <th>Last Updated</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>US Dollar</td>
+                                    <td>USD</td>
+                                    <td>$</td>
+                                    <td>1.00 (Base)</td>
+                                    <td>-</td>
+                                    <td><span class="badge bg-primary">Base</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Euro</td>
+                                    <td>EUR</td>
+                                    <td>&euro;</td>
+                                    <td>0.85</td>
+                                    <td>Today</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coming Soon Notice -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div>
+                        <strong>Coming Soon!</strong> Multi-currency support and automatic exchange rate updates are under development.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

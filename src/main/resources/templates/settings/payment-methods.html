@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <title>Payment Methods</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Payment Methods</h1>
+                        <p class="text-muted">Configure accepted payment methods</p>
+                    </div>
+                    <button class="btn btn-primary" data-bs-target="#paymentMethodModal" data-bs-toggle="modal">
+                        <i class="bi bi-plus-circle me-2"></i>Add Payment Method
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Methods List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Payment Methods</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>Description</th>
+                                    <th>Account</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-cash me-2 text-success"></i>Cash
+                                    </td>
+                                    <td>Cash payments</td>
+                                    <td>Cash on Hand</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-bank me-2 text-primary"></i>Bank Transfer
+                                    </td>
+                                    <td>Direct bank transfer</td>
+                                    <td>Main Bank Account</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-credit-card me-2 text-info"></i>Credit Card
+                                    </td>
+                                    <td>Visa, Mastercard, etc.</td>
+                                    <td>Main Bank Account</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-check2-square me-2 text-secondary"></i>Check
+                                    </td>
+                                    <td>Check payments</td>
+                                    <td>Undeposited Funds</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

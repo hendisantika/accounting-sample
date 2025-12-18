@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <title>Document Templates</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h3 mb-0">Document Templates</h1>
+                <p class="text-muted">Customize your invoice and document templates</p>
+            </div>
+        </div>
+
+        <!-- Templates Grid -->
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3" style="height: 150px; background: #f8f9fc; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-file-earmark-text" style="font-size: 3rem; color: #4e73df;"></i>
+                        </div>
+                        <h6>Classic Invoice</h6>
+                        <p class="text-muted small">Clean and professional layout</p>
+                        <span class="badge bg-success mb-2">Default</span>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary">Preview</button>
+                            <button class="btn btn-sm btn-primary">Customize</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3" style="height: 150px; background: #f8f9fc; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-file-earmark-richtext" style="font-size: 3rem; color: #1cc88a;"></i>
+                        </div>
+                        <h6>Modern Invoice</h6>
+                        <p class="text-muted small">Contemporary design with colors</p>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary">Preview</button>
+                            <button class="btn btn-sm btn-outline-secondary">Use</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3" style="height: 150px; background: #f8f9fc; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-file-earmark-ruled" style="font-size: 3rem; color: #36b9cc;"></i>
+                        </div>
+                        <h6>Minimal Invoice</h6>
+                        <p class="text-muted small">Simple and minimal design</p>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary">Preview</button>
+                            <button class="btn btn-sm btn-outline-secondary">Use</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coming Soon Notice -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div>
+                        <strong>Coming Soon!</strong> Template customization functionality is under development.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

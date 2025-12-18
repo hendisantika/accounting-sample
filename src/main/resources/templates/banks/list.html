@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <title>Bank Accounts</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Bank Accounts</h1>
+                        <p class="text-muted">Manage your bank and cash accounts</p>
+                    </div>
+                    <button class="btn btn-primary" data-bs-target="#bankModal" data-bs-toggle="modal">
+                        <i class="bi bi-plus-circle me-2"></i>Add Bank Account
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card border-left-primary shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Balance</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalBalance">$0.00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-left-success shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Active Accounts</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="activeAccounts">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-left-info shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Pending Reconciliation</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="pendingReconciliation">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bank Accounts List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Bank Account List</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Account Name</th>
+                                    <th>Bank</th>
+                                    <th>Account Number</th>
+                                    <th>Currency</th>
+                                    <th>Balance</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center text-muted py-4" colspan="7">
+                                        <i class="bi bi-bank fs-1 d-block mb-2"></i>
+                                        No bank accounts found. Click "Add Bank Account" to get started.
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coming Soon Notice -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div>
+                        <strong>Coming Soon!</strong> Bank account management is under development.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

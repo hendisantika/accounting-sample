@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Item</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0" th:text="${id != null ? 'Edit Item' : 'New Item'}">New Item</h1>
+                        <p class="text-muted" th:text="${id != null ? 'Update item details' : 'Create a new product or service'}">Create a new product or service</p>
+                    </div>
+                    <a class="btn btn-outline-secondary" th:href="@{/items}">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Items
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Item Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <form id="itemForm">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="name">Item Name *</label>
+                                    <input class="form-control" id="name" name="name" required type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="sku">SKU / Code</label>
+                                    <input class="form-control" id="sku" name="sku" type="text">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="type">Item Type *</label>
+                                    <select class="form-select" id="type" name="type" required>
+                                        <option value="">Select Type</option>
+                                        <option value="PRODUCT">Product</option>
+                                        <option value="SERVICE">Service</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="unit">Unit of Measure</label>
+                                    <input class="form-control" id="unit" name="unit" placeholder="e.g., pcs, kg, hours" type="text">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="description">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            </div>
+
+                            <hr class="my-4">
+                            <h6 class="mb-3">Pricing</h6>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="salesPrice">Sales Price *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input class="form-control" id="salesPrice" min="0" name="salesPrice" required step="0.01" type="number">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="purchasePrice">Purchase Price</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input class="form-control" id="purchasePrice" min="0" name="purchasePrice" step="0.01" type="number">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+                            <h6 class="mb-3">Accounts</h6>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="salesAccountId">Sales Account</label>
+                                    <select class="form-select" id="salesAccountId" name="salesAccountId">
+                                        <option value="">Select Account</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="purchaseAccountId">Purchase Account</label>
+                                    <select class="form-select" id="purchaseAccountId" name="purchaseAccountId">
+                                        <option value="">Select Account</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input checked class="form-check-input" id="isActive" name="isActive" type="checkbox">
+                                    <label class="form-check-label" for="isActive">Active</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2">
+                                <a class="btn btn-secondary" th:href="@{/items}">Cancel</a>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-check-lg me-2"></i>Save Item
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

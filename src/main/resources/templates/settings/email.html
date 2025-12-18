@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <title>Email Settings</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h3 mb-0">Email Settings</h1>
+                <p class="text-muted">Configure email notifications and templates</p>
+            </div>
+        </div>
+
+        <!-- Email Configuration -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">SMTP Configuration</h6>
+                    </div>
+                    <div class="card-body">
+                        <form id="smtpForm">
+                            <div class="row mb-3">
+                                <div class="col-md-8">
+                                    <label class="form-label" for="smtpHost">SMTP Host</label>
+                                    <input class="form-control" id="smtpHost" name="smtpHost" placeholder="smtp.example.com" type="text">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="smtpPort">Port</label>
+                                    <input class="form-control" id="smtpPort" name="smtpPort" placeholder="587" type="number">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="smtpUsername">Username</label>
+                                    <input class="form-control" id="smtpUsername" name="smtpUsername" type="text">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="smtpPassword">Password</label>
+                                    <input class="form-control" id="smtpPassword" name="smtpPassword" type="password">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="fromEmail">From Email</label>
+                                    <input class="form-control" id="fromEmail" name="fromEmail" placeholder="noreply@yourcompany.com" type="email">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="fromName">From Name</label>
+                                    <input class="form-control" id="fromName" name="fromName" placeholder="Your Company Name" type="text">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" id="useTLS" name="useTLS" type="checkbox">
+                                    <label class="form-check-label" for="useTLS">Use TLS</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-primary" type="button">
+                                    <i class="bi bi-envelope me-2"></i>Send Test Email
+                                </button>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-check-lg me-2"></i>Save Settings
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Email Notifications</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check mb-3">
+                            <input checked class="form-check-input" id="invoiceCreated" type="checkbox">
+                            <label class="form-check-label" for="invoiceCreated">
+                                Send email when invoice is created
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input checked class="form-check-input" id="paymentReceived" type="checkbox">
+                            <label class="form-check-label" for="paymentReceived">
+                                Send email when payment is received
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" id="invoiceOverdue" type="checkbox">
+                            <label class="form-check-label" for="invoiceOverdue">
+                                Send reminder for overdue invoices
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coming Soon Notice -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div>
+                        <strong>Coming Soon!</strong> Email functionality is under development.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

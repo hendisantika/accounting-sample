@@ -110,6 +110,35 @@ public class ViewController {
         return "invoices/recurring";
     }
 
+    @GetMapping("/invoices/overdue")
+    public String overdueInvoices() {
+        return "invoices/overdue";
+    }
+
+    // ========== Sales Orders ==========
+
+    @GetMapping("/sales-orders")
+    public String salesOrders() {
+        return "sales-orders/list";
+    }
+
+    @GetMapping("/sales-orders/new")
+    public String newSalesOrder() {
+        return "sales-orders/form";
+    }
+
+    // ========== Credit Notes ==========
+
+    @GetMapping("/credit-notes")
+    public String creditNotes() {
+        return "credit-notes/list";
+    }
+
+    @GetMapping("/credit-notes/new")
+    public String newCreditNote() {
+        return "credit-notes/form";
+    }
+
     // ========== Vendor Views ==========
 
     @GetMapping("/vendors")
@@ -146,6 +175,35 @@ public class ViewController {
         return "bills/form";
     }
 
+    @GetMapping("/bills/recurring")
+    public String recurringBills() {
+        return "bills/recurring";
+    }
+
+    // ========== Purchase Orders ==========
+
+    @GetMapping("/purchase-orders")
+    public String purchaseOrders() {
+        return "purchase-orders/list";
+    }
+
+    @GetMapping("/purchase-orders/new")
+    public String newPurchaseOrder() {
+        return "purchase-orders/form";
+    }
+
+    // ========== Vendor Credits ==========
+
+    @GetMapping("/vendor-credits")
+    public String vendorCredits() {
+        return "vendor-credits/list";
+    }
+
+    @GetMapping("/vendor-credits/new")
+    public String newVendorCredit() {
+        return "vendor-credits/form";
+    }
+
     // ========== Item Views ==========
 
     @GetMapping("/items")
@@ -162,6 +220,18 @@ public class ViewController {
     public String editItem(@PathVariable Long id, Model model) {
         model.addAttribute("id", id);
         return "items/form";
+    }
+
+    @GetMapping("/items/categories")
+    public String itemCategories() {
+        return "items/categories";
+    }
+
+    // ========== Inventory Views ==========
+
+    @GetMapping("/inventory/adjustments")
+    public String inventoryAdjustments() {
+        return "inventory/adjustments";
     }
 
     // ========== Account Views ==========
@@ -186,6 +256,16 @@ public class ViewController {
     @GetMapping("/payments/new")
     public String newPayment() {
         return "payments/form";
+    }
+
+    @GetMapping("/payments/received")
+    public String paymentsReceived() {
+        return "payments/received";
+    }
+
+    @GetMapping("/payments/made")
+    public String paymentsMade() {
+        return "payments/made";
     }
 
     // ========== Journal Entry Views ==========
@@ -274,5 +354,76 @@ public class ViewController {
     @GetMapping("/settings")
     public String settings() {
         return "settings/index";
+    }
+
+    @GetMapping("/settings/organization")
+    public String settingsOrganization() {
+        return "settings/organization";
+    }
+
+    @GetMapping("/settings/users")
+    public String settingsUsers() {
+        return "settings/users";
+    }
+
+    @GetMapping("/settings/preferences")
+    public String settingsPreferences() {
+        return "settings/preferences";
+    }
+
+    @GetMapping("/settings/templates")
+    public String settingsTemplates() {
+        return "settings/templates";
+    }
+
+    @GetMapping("/settings/currencies")
+    public String settingsCurrencies() {
+        return "settings/currencies";
+    }
+
+    @GetMapping("/settings/payment-methods")
+    public String settingsPaymentMethods() {
+        return "settings/payment-methods";
+    }
+
+    @GetMapping("/settings/email")
+    public String settingsEmail() {
+        return "settings/email";
+    }
+
+    @GetMapping("/settings/integrations")
+    public String settingsIntegrations() {
+        return "settings/integrations";
+    }
+
+    // ========== Banking Views ==========
+
+    @GetMapping("/banks")
+    public String banks() {
+        return "banks/list";
+    }
+
+    @GetMapping("/banks/transactions")
+    public String bankTransactions() {
+        return "banks/transactions";
+    }
+
+    @GetMapping("/banks/reconciliation")
+    public String bankReconciliation() {
+        return "banks/reconciliation";
+    }
+
+    // ========== Tax Views ==========
+
+    @GetMapping("/taxes")
+    public String taxes() {
+        return "taxes/list";
+    }
+
+    // ========== Audit Log ==========
+
+    @GetMapping("/audit-log")
+    public String auditLog() {
+        return "audit/log";
     }
 }

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <title>Preferences</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h3 mb-0">Preferences</h1>
+                <p class="text-muted">Configure your accounting preferences</p>
+            </div>
+        </div>
+
+        <!-- Preferences Form -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Regional Settings</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="currency">Default Currency</label>
+                                <select class="form-select" id="currency" name="currency">
+                                    <option value="USD">USD - US Dollar</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                    <option value="GBP">GBP - British Pound</option>
+                                    <option value="IDR">IDR - Indonesian Rupiah</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="dateFormat">Date Format</label>
+                                <select class="form-select" id="dateFormat" name="dateFormat">
+                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="timezone">Time Zone</label>
+                                <select class="form-select" id="timezone" name="timezone">
+                                    <option value="UTC">UTC</option>
+                                    <option value="Asia/Jakarta">Asia/Jakarta</option>
+                                    <option value="America/New_York">America/New_York</option>
+                                    <option value="Europe/London">Europe/London</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="fiscalYearStart">Fiscal Year Start</label>
+                                <select class="form-select" id="fiscalYearStart" name="fiscalYearStart">
+                                    <option value="1">January</option>
+                                    <option value="4">April</option>
+                                    <option value="7">July</option>
+                                    <option value="10">October</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Invoice Settings</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="invoicePrefix">Invoice Prefix</label>
+                                <input class="form-control" id="invoicePrefix" name="invoicePrefix" type="text" value="INV-">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="defaultPaymentTerms">Default Payment Terms (days)</label>
+                                <input class="form-control" id="defaultPaymentTerms" name="defaultPaymentTerms" type="number" value="30">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="invoiceNotes">Default Invoice Notes</label>
+                            <textarea class="form-control" id="invoiceNotes" name="invoiceNotes" placeholder="Thank you for your business!" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-check-lg me-2"></i>Save Preferences
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

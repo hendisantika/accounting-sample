@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <title>Integrations</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h3 mb-0">Integrations</h1>
+                <p class="text-muted">Connect with third-party services</p>
+            </div>
+        </div>
+
+        <!-- Integrations Grid -->
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3" style="width: 48px; height: 48px; background: #0061ff; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-cloud text-white" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Dropbox</h6>
+                                <small class="text-muted">Cloud Storage</small>
+                            </div>
+                        </div>
+                        <p class="text-muted small">Store and sync your documents with Dropbox</p>
+                        <button class="btn btn-outline-primary btn-sm">Connect</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3" style="width: 48px; height: 48px; background: #34a853; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-google text-white" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Google Drive</h6>
+                                <small class="text-muted">Cloud Storage</small>
+                            </div>
+                        </div>
+                        <p class="text-muted small">Store and sync your documents with Google Drive</p>
+                        <button class="btn btn-outline-primary btn-sm">Connect</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3" style="width: 48px; height: 48px; background: #635bff; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-stripe text-white" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Stripe</h6>
+                                <small class="text-muted">Payment Gateway</small>
+                            </div>
+                        </div>
+                        <p class="text-muted small">Accept online payments via Stripe</p>
+                        <button class="btn btn-outline-primary btn-sm">Connect</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3" style="width: 48px; height: 48px; background: #003087; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-paypal text-white" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">PayPal</h6>
+                                <small class="text-muted">Payment Gateway</small>
+                            </div>
+                        </div>
+                        <p class="text-muted small">Accept online payments via PayPal</p>
+                        <button class="btn btn-outline-primary btn-sm">Connect</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3" style="width: 48px; height: 48px; background: #4a154b; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-slack text-white" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Slack</h6>
+                                <small class="text-muted">Communication</small>
+                            </div>
+                        </div>
+                        <p class="text-muted small">Get notifications in your Slack workspace</p>
+                        <button class="btn btn-outline-primary btn-sm">Connect</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3" style="width: 48px; height: 48px; background: #ff4500; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-plugin text-white" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Zapier</h6>
+                                <small class="text-muted">Automation</small>
+                            </div>
+                        </div>
+                        <p class="text-muted small">Connect to 3000+ apps via Zapier</p>
+                        <button class="btn btn-outline-primary btn-sm">Connect</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coming Soon Notice -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div>
+                        <strong>Coming Soon!</strong> Third-party integrations are under development.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

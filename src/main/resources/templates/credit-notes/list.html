@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Credit Notes</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Credit Notes</h1>
+                        <p class="text-muted">Manage customer credit notes</p>
+                    </div>
+                    <a class="btn btn-primary" th:href="@{/credit-notes/new}">
+                        <i class="bi bi-plus-circle me-2"></i>New Credit Note
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Credit Notes List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Credit Note List</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Credit Note #</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Invoice Ref</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center text-muted py-4" colspan="7">
+                                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                        No credit notes found. Click "New Credit Note" to create one.
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

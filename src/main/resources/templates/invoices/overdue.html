@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Overdue Invoices</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">Overdue Invoices</h1>
+                        <p class="text-muted">Track and manage past-due invoices</p>
+                    </div>
+                    <a class="btn btn-outline-primary" th:href="@{/invoices}">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Invoices
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card border-left-danger shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Total Overdue</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalOverdue">$0.00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-left-warning shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Overdue Count</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="overdueCount">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-left-info shadow h-100">
+                    <div class="card-body">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Average Days Overdue</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="avgDaysOverdue">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overdue Invoices Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Overdue Invoice List</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="overdueTable">
+                                <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Customer</th>
+                                    <th>Due Date</th>
+                                    <th>Days Overdue</th>
+                                    <th>Amount</th>
+                                    <th>Balance</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody id="overdueTableBody">
+                                <tr>
+                                    <td class="text-center text-muted py-5" colspan="7">
+                                        <i class="bi bi-check-circle text-success" style="font-size: 3rem;"></i>
+                                        <p class="mt-3 mb-0">No overdue invoices!</p>
+                                        <p class="text-muted">All your invoices are up to date.</p>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
