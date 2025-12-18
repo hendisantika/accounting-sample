@@ -278,6 +278,7 @@ jobs:
             docker run -d --restart unless-stopped \
               -p $APP_SERVER_PORT:$APP_SERVER_PORT \
               --env-file .env \
+              -e SPRING_PROFILES_ACTIVE=dev \
               --name $CONTAINER_NAME \
               $FULL_IMAGE
 
