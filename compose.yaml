@@ -1,11 +1,13 @@
 services:
   mysql:
-    image: mysql:8.4
+    image: mysql:9.5.0
     container_name: accounting-mysql
     environment:
       MYSQL_ROOT_PASSWORD: r00t
       MYSQL_ROOT_HOST: '%'
       MYSQL_DATABASE: accounting_db
+      MYSQL_USER: yu71
+      MYSQL_PASSWORD: 53cret
     ports:
       - "3312:3306"
     volumes:
@@ -39,8 +41,8 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: r00t
+      PMA_USER: yu71
+      PMA_PASSWORD: 53cret
     ports:
       - "8081:80"
     depends_on:

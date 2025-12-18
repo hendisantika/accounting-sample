@@ -1,42 +1,13 @@
 package id.my.hendisantika.accountingsample.config;
 
-import id.my.hendisantika.accountingsample.model.Account;
-import id.my.hendisantika.accountingsample.model.Bill;
-import id.my.hendisantika.accountingsample.model.BillItem;
-import id.my.hendisantika.accountingsample.model.Customer;
-import id.my.hendisantika.accountingsample.model.Invoice;
-import id.my.hendisantika.accountingsample.model.InvoiceItem;
-import id.my.hendisantika.accountingsample.model.Item;
-import id.my.hendisantika.accountingsample.model.Organization;
-import id.my.hendisantika.accountingsample.model.Payment;
-import id.my.hendisantika.accountingsample.model.Tax;
-import id.my.hendisantika.accountingsample.model.User;
-import id.my.hendisantika.accountingsample.model.Vendor;
-import id.my.hendisantika.accountingsample.model.enums.AccountType;
-import id.my.hendisantika.accountingsample.model.enums.BillStatus;
-import id.my.hendisantika.accountingsample.model.enums.InvoiceStatus;
-import id.my.hendisantika.accountingsample.model.enums.ItemType;
-import id.my.hendisantika.accountingsample.model.enums.PaymentMethod;
-import id.my.hendisantika.accountingsample.model.enums.PaymentType;
-import id.my.hendisantika.accountingsample.model.enums.UserRole;
-import id.my.hendisantika.accountingsample.repository.AccountRepository;
-import id.my.hendisantika.accountingsample.repository.BillItemRepository;
-import id.my.hendisantika.accountingsample.repository.BillRepository;
-import id.my.hendisantika.accountingsample.repository.CustomerRepository;
-import id.my.hendisantika.accountingsample.repository.InvoiceItemRepository;
-import id.my.hendisantika.accountingsample.repository.InvoiceRepository;
-import id.my.hendisantika.accountingsample.repository.ItemRepository;
-import id.my.hendisantika.accountingsample.repository.OrganizationRepository;
-import id.my.hendisantika.accountingsample.repository.PaymentRepository;
-import id.my.hendisantika.accountingsample.repository.TaxRepository;
-import id.my.hendisantika.accountingsample.repository.UserRepository;
-import id.my.hendisantika.accountingsample.repository.VendorRepository;
+import id.my.hendisantika.accountingsample.model.*;
+import id.my.hendisantika.accountingsample.model.enums.*;
+import id.my.hendisantika.accountingsample.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -54,8 +25,11 @@ import java.util.Random;
  * Date: 16/10/25
  * Time: 14.00
  * To change this template use File | Settings | File Templates.
+ *
+ * DISABLED: Data seeding is now handled by Flyway migration V9_18122025_1000__seed_data.sql
+ * This class is kept for reference only.
  */
-@Component
+// @Component  // Disabled - Using Flyway migration for data seeding
 @Order(1)
 @RequiredArgsConstructor
 @Slf4j
