@@ -3,18 +3,16 @@ package id.my.hendisantika.accountingsample.integration;
 import tools.jackson.databind.ObjectMapper;
 import id.my.hendisantika.accountingsample.dto.customer.CustomerRequest;
 import id.my.hendisantika.accountingsample.model.Customer;
-import id.my.hendisantika.accountingsample.model.Organization;
 import id.my.hendisantika.accountingsample.repository.CustomerRepository;
-import id.my.hendisantika.accountingsample.repository.OrganizationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -38,29 +36,9 @@ class CustomerControllerIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @Autowired
-    private OrganizationRepository organizationRepository;
-
-    private Organization testOrganization;
-
     @BeforeEach
     void setUp() {
-        customerRepository.deleteAll();
-
-        // Ensure organization exists or create one
-        testOrganization = organizationRepository.findAll().stream()
-                .findFirst()
-                .orElseGet(() -> {
-                    Organization org = new Organization();
-                    org.setName("Test Organization");
-                    org.setEmail("test@example.com");
-                    org.setPhone("1234567890");
-                    org.setCurrencyCode("USD");
-                    org.setTimeZone("UTC");
-                    org.setFiscalYearStartMonth(1);
-                    return organizationRepository.save(org);
-                });
-    }
+        customerRepository.deleteAll();    }
 
     @Test
     @DisplayName("Should get all customers")
@@ -131,7 +109,6 @@ class CustomerControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     @DisplayName("Should create new customer")
     void shouldCreateCustomer() throws Exception {
         // Given
@@ -168,7 +145,6 @@ class CustomerControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     @DisplayName("Should fail to create customer with invalid email")
     void shouldFailToCreateCustomerWithInvalidEmail() throws Exception {
         // Given
@@ -184,7 +160,6 @@ class CustomerControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     @DisplayName("Should fail to create customer without name")
     void shouldFailToCreateCustomerWithoutName() throws Exception {
         // Given
@@ -199,7 +174,6 @@ class CustomerControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "ACCOUNTANT")
     @DisplayName("Should update customer")
     void shouldUpdateCustomer() throws Exception {
         // Given
@@ -224,7 +198,6 @@ class CustomerControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
     @DisplayName("Should delete customer")
     void shouldDeleteCustomer() throws Exception {
         // Given
@@ -253,6 +226,7 @@ class CustomerControllerIntegrationTest extends BaseIntegrationTest {
     // Helper method
     private Customer createTestCustomer(String name, String email) {
         Customer customer = new Customer();
+        customer.setCustomerCode("CUST-" + UUID.randomUUID().toString().substring(0, 8));
         customer.setName(name);
         customer.setEmail(email);
         customer.setPhone("1234567890");

@@ -5,7 +5,6 @@ import id.my.hendisantika.accountingsample.dto.payment.PaymentRequest;
 import id.my.hendisantika.accountingsample.model.Account;
 import id.my.hendisantika.accountingsample.model.Customer;
 import id.my.hendisantika.accountingsample.model.Invoice;
-import id.my.hendisantika.accountingsample.model.Organization;
 import id.my.hendisantika.accountingsample.model.Payment;
 import id.my.hendisantika.accountingsample.model.Vendor;
 import id.my.hendisantika.accountingsample.model.enums.AccountType;
@@ -15,7 +14,6 @@ import id.my.hendisantika.accountingsample.model.enums.PaymentType;
 import id.my.hendisantika.accountingsample.repository.AccountRepository;
 import id.my.hendisantika.accountingsample.repository.CustomerRepository;
 import id.my.hendisantika.accountingsample.repository.InvoiceRepository;
-import id.my.hendisantika.accountingsample.repository.OrganizationRepository;
 import id.my.hendisantika.accountingsample.repository.PaymentRepository;
 import id.my.hendisantika.accountingsample.repository.VendorRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,10 +21,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 import java.time.LocalDate;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -62,11 +60,6 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private AccountRepository accountRepository;
-
-    @Autowired
-    private OrganizationRepository organizationRepository;
-
-    private Organization testOrganization;
     private Customer testCustomer;
     private Vendor testVendor;
     private Account testBankAccount;
@@ -78,23 +71,9 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
         invoiceRepository.deleteAll();
         customerRepository.deleteAll();
         vendorRepository.deleteAll();
-
-        // Ensure organization exists or create one
-        testOrganization = organizationRepository.findAll().stream()
-                .findFirst()
-                .orElseGet(() -> {
-                    Organization org = new Organization();
-                    org.setName("Test Organization");
-                    org.setEmail("test@example.com");
-                    org.setPhone("1234567890");
-                    org.setCurrencyCode("USD");
-                    org.setTimeZone("UTC");
-                    org.setFiscalYearStartMonth(1);
-                    return organizationRepository.save(org);
-                });
-
         // Create test customer
         testCustomer = new Customer();
+        testCustomer.setCustomerCode("CUST-" + UUID.randomUUID().toString().substring(0, 8));
         testCustomer.setName("Test Customer");
         testCustomer.setEmail("customer@example.com");
         testCustomer.setPhone("1234567890");
@@ -104,6 +83,7 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
 
         // Create test vendor
         testVendor = new Vendor();
+        testVendor.setVendorCode("VEND-" + UUID.randomUUID().toString().substring(0, 8));
         testVendor.setName("Test Vendor");
         testVendor.setEmail("vendor@example.com");
         testVendor.setPhone("1234567890");
@@ -137,6 +117,7 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
         testInvoice.setTaxAmount(new BigDecimal("100.00"));
         testInvoice.setTotalAmount(new BigDecimal("1100.00"));
         testInvoice.setPaidAmount(BigDecimal.ZERO);
+        testInvoice.setBalance(new BigDecimal("1100.00"));
         testInvoice = invoiceRepository.save(testInvoice);
     }
 
@@ -189,6 +170,7 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
     void shouldGetPaymentsByVendor() throws Exception {
         // Given
         Payment payment = new Payment();
+        payment.setPaymentNumber("PAY-" + UUID.randomUUID().toString().substring(0, 8));
         payment.setPaymentType(PaymentType.PAYMENT_MADE);
         payment.setVendor(testVendor);
         payment.setOrganization(testOrganization);
@@ -220,7 +202,6 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     @DisplayName("Should create new payment")
     void shouldCreatePayment() throws Exception {
         // Given
@@ -248,7 +229,6 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     @DisplayName("Should fail to create payment without payment type")
     void shouldFailToCreatePaymentWithoutPaymentType() throws Exception {
         // Given
@@ -268,7 +248,6 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     @DisplayName("Should fail to create payment with negative amount")
     void shouldFailToCreatePaymentWithNegativeAmount() throws Exception {
         // Given
@@ -289,7 +268,6 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     @DisplayName("Should record invoice payment")
     void shouldRecordInvoicePayment() throws Exception {
         // Given
@@ -316,7 +294,6 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "ACCOUNTANT")
     @DisplayName("Should update payment")
     void shouldUpdatePayment() throws Exception {
         // Given
@@ -345,7 +322,6 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
     @DisplayName("Should delete payment")
     void shouldDeletePayment() throws Exception {
         // Given
@@ -374,6 +350,7 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
     // Helper method
     private Payment createTestPayment(PaymentType paymentType, BigDecimal amount) {
         Payment payment = new Payment();
+        payment.setPaymentNumber("PAY-" + UUID.randomUUID().toString().substring(0, 8));
         payment.setPaymentType(paymentType);
         payment.setCustomer(testCustomer);
         payment.setOrganization(testOrganization);

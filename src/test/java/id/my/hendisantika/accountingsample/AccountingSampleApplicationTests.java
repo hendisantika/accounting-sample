@@ -1,7 +1,7 @@
 package id.my.hendisantika.accountingsample;
 
+import id.my.hendisantika.accountingsample.integration.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,8 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * Time: 08.00
  * To change this template use File | Settings | File Templates.
  */
-@SpringBootTest
-class AccountingSampleApplicationTests {
+class AccountingSampleApplicationTests extends BaseIntegrationTest {
 
     @Test
     void contextLoads() {

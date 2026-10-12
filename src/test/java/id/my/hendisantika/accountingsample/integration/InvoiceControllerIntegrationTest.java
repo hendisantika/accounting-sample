@@ -7,23 +7,21 @@ import id.my.hendisantika.accountingsample.model.Account;
 import id.my.hendisantika.accountingsample.model.Customer;
 import id.my.hendisantika.accountingsample.model.Invoice;
 import id.my.hendisantika.accountingsample.model.Item;
-import id.my.hendisantika.accountingsample.model.Organization;
 import id.my.hendisantika.accountingsample.model.enums.AccountType;
 import id.my.hendisantika.accountingsample.model.enums.InvoiceStatus;
 import id.my.hendisantika.accountingsample.repository.AccountRepository;
 import id.my.hendisantika.accountingsample.repository.CustomerRepository;
 import id.my.hendisantika.accountingsample.repository.InvoiceRepository;
 import id.my.hendisantika.accountingsample.repository.ItemRepository;
-import id.my.hendisantika.accountingsample.repository.OrganizationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +56,7 @@ class InvoiceControllerIntegrationTest extends BaseIntegrationTest {
     private ItemRepository itemRepository;
 
     @Autowired
-    private OrganizationRepository organizationRepository;
-
-    @Autowired
     private AccountRepository accountRepository;
-
-    private Organization testOrganization;
     private Customer testCustomer;
     private Item testItem;
     private Account testRevenueAccount;
@@ -73,23 +66,9 @@ class InvoiceControllerIntegrationTest extends BaseIntegrationTest {
         invoiceRepository.deleteAll();
         customerRepository.deleteAll();
         itemRepository.deleteAll();
-
-        // Ensure organization exists or create one
-        testOrganization = organizationRepository.findAll().stream()
-                .findFirst()
-                .orElseGet(() -> {
-                    Organization org = new Organization();
-                    org.setName("Test Organization");
-                    org.setEmail("test@example.com");
-                    org.setPhone("1234567890");
-                    org.setCurrencyCode("USD");
-                    org.setTimeZone("UTC");
-                    org.setFiscalYearStartMonth(1);
-                    return organizationRepository.save(org);
-                });
-
         // Create test customer
         testCustomer = new Customer();
+        testCustomer.setCustomerCode("CUST-" + UUID.randomUUID().toString().substring(0, 8));
         testCustomer.setName("Test Customer");
         testCustomer.setEmail("customer@example.com");
         testCustomer.setPhone("1234567890");
@@ -201,7 +180,6 @@ class InvoiceControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     @DisplayName("Should create new invoice")
     void shouldCreateInvoice() throws Exception {
         // Given
@@ -235,11 +213,10 @@ class InvoiceControllerIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.message", is("Invoice created")))
                 .andExpect(jsonPath("$.data.id", notNullValue()))
                 .andExpect(jsonPath("$.data.status", is(InvoiceStatus.DRAFT.toString())))
-                .andExpect(jsonPath("$.data.totalAmount", greaterThan(0)));
+                .andExpect(jsonPath("$.data.totalAmount", greaterThan(0.0)));
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     @DisplayName("Should fail to create invoice without customer")
     void shouldFailToCreateInvoiceWithoutCustomer() throws Exception {
         // Given
@@ -255,7 +232,6 @@ class InvoiceControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     @DisplayName("Should fail to create invoice without invoice date")
     void shouldFailToCreateInvoiceWithoutInvoiceDate() throws Exception {
         // Given
@@ -271,7 +247,6 @@ class InvoiceControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "ACCOUNTANT")
     @DisplayName("Should update invoice")
     void shouldUpdateInvoice() throws Exception {
         // Given
@@ -307,7 +282,6 @@ class InvoiceControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "ACCOUNTANT")
     @DisplayName("Should update invoice status")
     void shouldUpdateInvoiceStatus() throws Exception {
         // Given
@@ -323,7 +297,6 @@ class InvoiceControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
     @DisplayName("Should delete invoice")
     void shouldDeleteInvoice() throws Exception {
         // Given
