@@ -34,6 +34,7 @@ import id.my.hendisantika.accountingsample.repository.VendorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -57,6 +58,7 @@ import java.util.Random;
  */
 @Component
 @Order(1)
+@ConditionalOnProperty(name = "app.seed-data.enabled", havingValue = "true", matchIfMissing = true)
 @RequiredArgsConstructor
 @Slf4j
 public class DataSeeder implements CommandLineRunner {
@@ -199,12 +201,16 @@ public class DataSeeder implements CommandLineRunner {
         log.info("Created {} users", users.size());
     }
 
+    private String toEmailLocalPart(String name) {
+        return name.toLowerCase().replaceAll("[^a-z0-9]", "");
+    }
+
     private List<User> createUsersFromArray(String[] characters, String series, UserRole[] roles, int startRoleIndex) {
         List<User> userList = new ArrayList<>();
         for (int i = 0; i < characters.length; i++) {
             String firstName = characters[i];
             String lastName = series.substring(0, 1).toUpperCase() + series.substring(1);
-            String email = firstName.toLowerCase() + "." + series + "@animeaccounting.com";
+            String email = toEmailLocalPart(firstName) + "." + series + "@animeaccounting.com";
 
             User user = User.builder()
                     .organization(organization)
@@ -244,7 +250,7 @@ public class DataSeeder implements CommandLineRunner {
                     .organization(organization)
                     .name(name)
                     .companyName(companyName)
-                    .email(name.toLowerCase() + ".customer@example.com")
+                    .email(toEmailLocalPart(name) + ".customer@example.com")
                     .phone("+1-555-" + String.format("%04d", 1000 + i))
                     .mobile("+1-555-" + String.format("%04d", 2000 + i))
                     .website("https://www." + name.toLowerCase() + ".com")
@@ -293,7 +299,7 @@ public class DataSeeder implements CommandLineRunner {
                     .organization(organization)
                     .name(name)
                     .companyName(companyName)
-                    .email(name.toLowerCase() + ".vendor@example.com")
+                    .email(toEmailLocalPart(name) + ".vendor@example.com")
                     .phone("+1-555-" + String.format("%04d", 3000 + i))
                     .mobile("+1-555-" + String.format("%04d", 4000 + i))
                     .website("https://www." + name.toLowerCase() + "vendor.com")
