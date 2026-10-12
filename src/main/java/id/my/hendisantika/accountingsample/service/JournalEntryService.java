@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class JournalEntryService {
 
     private final JournalEntryRepository journalEntryRepository;

@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
