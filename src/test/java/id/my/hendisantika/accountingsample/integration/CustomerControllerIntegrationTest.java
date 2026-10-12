@@ -4,7 +4,6 @@ import tools.jackson.databind.ObjectMapper;
 import id.my.hendisantika.accountingsample.dto.customer.CustomerRequest;
 import id.my.hendisantika.accountingsample.model.Customer;
 import id.my.hendisantika.accountingsample.repository.CustomerRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +34,6 @@ class CustomerControllerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private CustomerRepository customerRepository;
-
-    @BeforeEach
-    void setUp() {
-        customerRepository.deleteAll();    }
 
     @Test
     @DisplayName("Should get all customers")

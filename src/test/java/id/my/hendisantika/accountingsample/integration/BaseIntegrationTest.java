@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -43,6 +44,9 @@ public abstract class BaseIntegrationTest {
     @Autowired
     protected UserRepository userRepository;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     protected Organization testOrganization;
 
     protected User testUser;
@@ -72,7 +76,10 @@ public abstract class BaseIntegrationTest {
     }
 
     @BeforeEach
-    void authenticateTestUser() {
+    void setUpTenant() {
+        // Start every test from empty business tables, regardless of test class order
+        jdbcTemplate.execute("TRUNCATE TABLE customers, vendors, items RESTART IDENTITY CASCADE");
+
         testOrganization = organizationRepository.findByEmail(TEST_ORG_EMAIL)
                 .orElseGet(() -> {
                     Organization org = new Organization();

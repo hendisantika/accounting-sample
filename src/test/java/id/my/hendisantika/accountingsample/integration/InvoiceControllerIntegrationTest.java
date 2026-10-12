@@ -63,9 +63,6 @@ class InvoiceControllerIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        invoiceRepository.deleteAll();
-        customerRepository.deleteAll();
-        itemRepository.deleteAll();
         // Create test customer
         testCustomer = new Customer();
         testCustomer.setCustomerCode("CUST-" + UUID.randomUUID().toString().substring(0, 8));

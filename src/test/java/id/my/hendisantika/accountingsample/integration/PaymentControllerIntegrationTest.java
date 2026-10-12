@@ -67,10 +67,6 @@ class PaymentControllerIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        paymentRepository.deleteAll();
-        invoiceRepository.deleteAll();
-        customerRepository.deleteAll();
-        vendorRepository.deleteAll();
         // Create test customer
         testCustomer = new Customer();
         testCustomer.setCustomerCode("CUST-" + UUID.randomUUID().toString().substring(0, 8));
