@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -78,6 +79,7 @@ public class VendorService {
 
         Vendor vendor = Vendor.builder()
                 .organization(organization)
+                .vendorCode("VEND-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase())
                 .name(request.getName())
                 .companyName(request.getCompanyName())
                 .email(request.getEmail())
