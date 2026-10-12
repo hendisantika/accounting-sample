@@ -20,12 +20,14 @@ import id.my.hendisantika.accountingsample.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -88,9 +90,12 @@ public class InvoiceService {
     @Transactional
     public InvoiceResponse createInvoice(InvoiceRequest request) {
         Long orgId = SecurityUtils.getCurrentOrganizationId();
+        String invoiceNumber = StringUtils.hasText(request.getInvoiceNumber())
+                ? request.getInvoiceNumber()
+                : "INV-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
         // Check if invoice number already exists
-        if (invoiceRepository.existsByInvoiceNumberAndOrganizationId(request.getInvoiceNumber(), orgId)) {
+        if (invoiceRepository.existsByInvoiceNumberAndOrganizationId(invoiceNumber, orgId)) {
             throw new BusinessException("Invoice number already exists");
         }
 
@@ -103,7 +108,7 @@ public class InvoiceService {
         Invoice invoice = Invoice.builder()
                 .organization(organization)
                 .customer(customer)
-                .invoiceNumber(request.getInvoiceNumber())
+                .invoiceNumber(invoiceNumber)
                 .invoiceDate(request.getInvoiceDate())
                 .dueDate(request.getDueDate())
                 .status(request.getStatus() != null ? request.getStatus() : InvoiceStatus.DRAFT)
@@ -163,9 +168,14 @@ public class InvoiceService {
             throw new BusinessException("Cannot edit invoice with status: " + invoice.getStatus());
         }
 
+        // Keep the existing invoice number unless a new one is provided
+        String invoiceNumber = StringUtils.hasText(request.getInvoiceNumber())
+                ? request.getInvoiceNumber()
+                : invoice.getInvoiceNumber();
+
         // Check if new invoice number already exists (if changed)
-        if (!request.getInvoiceNumber().equals(invoice.getInvoiceNumber()) &&
-                invoiceRepository.existsByInvoiceNumberAndOrganizationId(request.getInvoiceNumber(), orgId)) {
+        if (!invoiceNumber.equals(invoice.getInvoiceNumber()) &&
+                invoiceRepository.existsByInvoiceNumberAndOrganizationId(invoiceNumber, orgId)) {
             throw new BusinessException("Invoice number already exists");
         }
 
@@ -174,7 +184,7 @@ public class InvoiceService {
 
         // Update invoice fields
         invoice.setCustomer(customer);
-        invoice.setInvoiceNumber(request.getInvoiceNumber());
+        invoice.setInvoiceNumber(invoiceNumber);
         invoice.setInvoiceDate(request.getInvoiceDate());
         invoice.setDueDate(request.getDueDate());
         if (request.getStatus() != null) invoice.setStatus(request.getStatus());
