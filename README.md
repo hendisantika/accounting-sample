@@ -1,7 +1,8 @@
 # Accounting Sample - Full-Featured Multi-Tenant Accounting System
 
+[![Java CI with Maven](https://github.com/hendisantika/accounting-sample/actions/workflows/maven.yml/badge.svg)](https://github.com/hendisantika/accounting-sample/actions/workflows/maven.yml)
 [![Java](https://img.shields.io/badge/Java-25-orange.svg)](https://openjdk.java.net/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue.svg)](https://www.postgresql.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -43,19 +44,19 @@ Thymeleaf-based UI and complete double-entry bookkeeping system with multi-tenan
 | Technology            | Version | Purpose                        |
 |-----------------------|---------|--------------------------------|
 | **Java**              | 25      | Programming Language           |
-| **Spring Boot**       | 3.5.6   | Application Framework          |
+| **Spring Boot**       | 4.0.5   | Application Framework          |
 | **PostgreSQL**        | 17      | Primary Database               |
 | **Redis**             | 7       | Caching Layer                  |
 | **Flyway**            | Latest  | Database Migration             |
-| **Spring Security**   | 6.x     | Authentication & Authorization |
+| **Spring Security**   | 7.x     | Authentication & Authorization |
 | **JWT (JJWT)**        | 0.13.0  | Token-based Auth               |
 | **Spring Data JPA**   | Latest  | ORM & Data Access              |
 | **MapStruct**         | 1.6.3   | Object Mapping                 |
 | **QueryDSL**          | 5.1.0   | Type-safe Queries              |
-| **iText7**            | 9.3.0   | PDF Generation                 |
-| **Apache POI**        | 5.3.0   | Excel Export                   |
-| **OpenCSV**           | 5.9     | CSV Export                     |
-| **SpringDoc OpenAPI** | 2.8.13  | API Documentation              |
+| **iText7**            | 9.5.0   | PDF Generation                 |
+| **Apache POI**        | 5.5.1   | Excel Export                   |
+| **OpenCSV**           | 5.12.0  | CSV Export                     |
+| **SpringDoc OpenAPI** | 3.0.2   | API Documentation              |
 | **Lombok**            | Latest  | Boilerplate Reduction          |
 
 ### Frontend
@@ -64,8 +65,8 @@ Thymeleaf-based UI and complete double-entry bookkeeping system with multi-tenan
 |------------------|---------|------------------------|
 | **Thymeleaf**    | 3.x     | Server-side Templating |
 | **Bootstrap**    | 5.3.8   | UI Framework           |
-| **jQuery**       | 3.7.1   | JavaScript Library     |
-| **Font Awesome** | 7.0.1   | Icons                  |
+| **jQuery**       | 4.0.0   | JavaScript Library     |
+| **Font Awesome** | 7.2.0   | Icons                  |
 | **Chart.js**     | 4.5.1   | Data Visualization     |
 
 ---
@@ -274,7 +275,7 @@ Thymeleaf-based UI and complete double-entry bookkeeping system with multi-tenan
 **UI Features:**
 
 - [x] Bootstrap 5.3.8 styling
-- [x] Font Awesome 7.0.1 icons
+- [x] Font Awesome 7.2.0 icons
 - [x] Chart.js integration
 - [x] Status badges with colors
 - [x] Custom CSS styling
@@ -299,7 +300,7 @@ Thymeleaf-based UI and complete double-entry bookkeeping system with multi-tenan
 - [x] Flyway migrations (8 migration files)
 - [x] Chart of accounts structure (35 accounts)
 - [x] Tax rates structure (20 tax types)
-- [x] Sample data seeder (can be enabled)
+- [x] Sample data seeder (enabled by default; disable with `app.seed-data.enabled=false`)
 - [x] Multi-tenant organization support
 - [x] Complete accounting workflow
 - [x] Ready for production data
@@ -320,7 +321,7 @@ Thymeleaf-based UI and complete double-entry bookkeeping system with multi-tenan
 
 ### Prerequisites
 
-- **Java 25** (or Java 21+)
+- **Java 25**
 - **Maven 3.9+**
 - **Docker & Docker Compose**
 
@@ -1209,6 +1210,32 @@ jwt.expiration=86400000  # 24 hours in milliseconds
 ---
 
 ## 🧪 Testing
+
+### Automated Tests
+
+The project ships with **118 automated tests**, which run on every push and pull request via
+[GitHub Actions](.github/workflows/maven.yml):
+
+- **Unit tests** (`src/test/java/.../service`) — service layer tests with Mockito
+- **Integration tests** (`src/test/java/.../integration`) — full Spring Boot context + MockMvc against a
+  real PostgreSQL 17 database started with [Testcontainers](https://testcontainers.com/)
+
+```bash
+# Run the whole test suite (requires a running Docker daemon for Testcontainers)
+mvn test
+
+# Run only the unit tests
+mvn test -Dtest='*ServiceTest'
+
+# Run only the integration tests
+mvn test -Dtest='*IntegrationTest'
+```
+
+Integration tests extend `BaseIntegrationTest`, which:
+
+- starts one shared PostgreSQL container and applies the Flyway migrations
+- creates a test organization and authenticates every request as its `OWNER`
+- disables demo data seeding (`app.seed-data.enabled=false`) so each test starts from a clean tenant
 
 ### Manual Testing Guide
 
