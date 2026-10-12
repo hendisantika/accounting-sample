@@ -1,6 +1,6 @@
 package id.my.hendisantika.accountingsample.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import id.my.hendisantika.accountingsample.dto.customer.CustomerRequest;
 import id.my.hendisantika.accountingsample.model.Customer;
 import id.my.hendisantika.accountingsample.model.Organization;
