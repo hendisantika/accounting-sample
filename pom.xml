@@ -146,7 +146,7 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>layout</artifactId>
-            <version>9.5.0</version>
+            <version>9.8.0</version>
         </dependency>
 
         <!-- Excel Export -->
